@@ -517,7 +517,6 @@ fileprivate struct Layout {
             self.bubbleViewFrame.origin.x = currentX
             if showSenderId {
                 self.senderIdViewFrame.origin.x = parameters.senderIdHorizontalOffset
-                self.bubbleViewFrame.origin.y = extraHeight
             }
         } else {
             currentX = containerRect.maxX - horizontalMargin
@@ -536,8 +535,12 @@ fileprivate struct Layout {
             self.bubbleViewFrame.origin.x = currentX
             if showSenderId {
                 self.senderIdViewFrame.origin.x = 0
-                self.bubbleViewFrame.origin.y = extraHeight
             }
+        }
+
+        if showSenderId {
+            self.bubbleViewFrame.origin.y = extraHeight
+            self.avatarViewFrame.origin.y = extraHeight
         }
 
         self.size = containerRect.size
