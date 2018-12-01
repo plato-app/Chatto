@@ -74,6 +74,8 @@ open class PhotoMessageViewModel<PhotoMessageModelT: PhotoMessageModelProtocol>:
     open func wasHidden() {
         // Need to declare empty. Otherwise subclass code won't execute (as of Xcode 7.2)
     }
+
+    public let senderId: String = "PhotoSender"
 }
 
 open class PhotoMessageViewModelDefaultBuilder<PhotoMessageModelT: PhotoMessageModelProtocol>: ViewModelBuilderProtocol {

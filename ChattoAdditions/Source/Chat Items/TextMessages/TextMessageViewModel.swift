@@ -34,6 +34,7 @@ open class TextMessageViewModel<TextMessageModelT: TextMessageModelProtocol>: Te
     }
     public let textMessage: TextMessageModelT
     public let messageViewModel: MessageViewModelProtocol
+    public let senderId: String = "TextSender"
 
     public init(textMessage: TextMessageModelT, messageViewModel: MessageViewModelProtocol) {
         self.textMessage = textMessage

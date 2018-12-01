@@ -29,6 +29,7 @@ public struct BaseMessageDecorationAttributes {
     public var canShowFailedIcon: Bool
     public let isShowingTail: Bool
     public let isShowingAvatar: Bool
+    public let isShowingSenderId: Bool
     public let isShowingSelectionIndicator: Bool
     public let isSelected: Bool
 
@@ -36,12 +37,14 @@ public struct BaseMessageDecorationAttributes {
                 isShowingTail: Bool = false,
                 isShowingAvatar: Bool = false,
                 isShowingSelectionIndicator: Bool = false,
-                isSelected: Bool = false) {
+                isSelected: Bool = false,
+                isShowingSenderId: Bool = false) {
         self.canShowFailedIcon = canShowFailedIcon
         self.isShowingTail = isShowingTail
         self.isShowingAvatar = isShowingAvatar
         self.isShowingSelectionIndicator = isShowingSelectionIndicator
         self.isSelected = isSelected
+        self.isShowingSenderId = isShowingSenderId
     }
 }
 

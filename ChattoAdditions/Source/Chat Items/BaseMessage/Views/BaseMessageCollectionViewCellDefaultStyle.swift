@@ -179,6 +179,22 @@ open class BaseMessageCollectionViewCellDefaultStyle: BaseMessageCollectionViewC
     open func layoutConstants(viewModel: MessageViewModelProtocol) -> BaseMessageCollectionViewCellLayoutConstants {
         return self.layoutConstants
     }
+ 
+    open func senderIdFont() -> UIFont {
+        return UIFont(name: "Arial", size: 11)!
+    }
+
+    open func senderIdTextColor() -> UIColor {
+        return UIColor.purple
+    }
+
+    open func senderIdHeight() -> CGFloat {
+        return 18
+    }
+
+    open func senderIdHorizontalOffset() -> CGFloat {
+        return 52
+    }
 }
 
 public extension BaseMessageCollectionViewCellDefaultStyle { // Default values
