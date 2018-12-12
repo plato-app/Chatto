@@ -51,6 +51,7 @@ public protocol MessageViewModelProtocol: class { // why class? https://gist.git
     var date: String { get }
     var status: MessageViewModelStatus { get }
     var avatarImage: Observable<UIImage?> { get set }
+    var senderId: String { get }
     func willBeShown() // Optional
     func wasHidden() // Optional
 }
@@ -128,6 +129,8 @@ open class MessageViewModel: MessageViewModelProtocol {
 
     public let dateFormatter: DateFormatter
     public private(set) var messageModel: MessageModelProtocol
+
+    open var senderId: String = "Sender"
 
     public init(dateFormatter: DateFormatter,
                 messageModel: MessageModelProtocol,

@@ -38,6 +38,7 @@ open class TextMessageViewModel<TextMessageModelT: TextMessageModelProtocol>: Te
     public let messageViewModel: MessageViewModelProtocol
     public let cellAccessibilityIdentifier = "chatto.message.text.cell"
     public let bubbleAccessibilityIdentifier = "chatto.message.text.bubble"
+    public let senderId: String = "TextSender"
 
     public init(textMessage: TextMessageModelT, messageViewModel: MessageViewModelProtocol) {
         self.textMessage = textMessage

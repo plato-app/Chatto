@@ -88,7 +88,8 @@ final class DemoChatItemsDecorator: ChatItemsDecoratorProtocol {
                 isShowingTail: showsTail,
                 isShowingAvatar: showsTail,
                 isShowingSelectionIndicator: isShowingSelectionIndicator,
-                isSelected: isSelected
+                isSelected: isSelected,
+                isShowingSenderId: true
             )
 
             decoratedChatItems.append(

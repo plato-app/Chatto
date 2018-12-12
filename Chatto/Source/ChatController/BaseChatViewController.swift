@@ -123,12 +123,12 @@ open class BaseChatViewController: UIViewController, UICollectionViewDataSource,
 
     open override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
-        self.keyboardTracker.startTracking()
+        self.keyboardTracker?.startTracking()
     }
 
     open override func viewWillDisappear(_ animated: Bool) {
         super.viewWillDisappear(animated)
-        self.keyboardTracker.stopTracking()
+        self.keyboardTracker?.stopTracking()
     }
 
     private func addCollectionView() {
@@ -239,14 +239,14 @@ open class BaseChatViewController: UIViewController, UICollectionViewDataSource,
     }
 
     var notificationCenter = NotificationCenter.default
-    var keyboardTracker: KeyboardTracker!
+    var keyboardTracker: KeyboardTracker?
 
     public private(set) var isFirstLayout: Bool = true
     override open func viewDidLayoutSubviews() {
         super.viewDidLayoutSubviews()
 
         self.adjustCollectionViewInsets(shouldUpdateContentOffset: true)
-        self.keyboardTracker.adjustTrackingViewSizeIfNeeded()
+        self.keyboardTracker?.adjustTrackingViewSizeIfNeeded()
 
         if self.isFirstLayout {
             self.updateQueue.start()
