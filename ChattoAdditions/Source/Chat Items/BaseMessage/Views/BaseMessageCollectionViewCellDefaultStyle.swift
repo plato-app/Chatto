@@ -180,19 +180,19 @@ open class BaseMessageCollectionViewCellDefaultStyle: BaseMessageCollectionViewC
         return self.layoutConstants
     }
  
-    open func senderIdFont() -> UIFont {
+    open func senderIdFont(viewModel: MessageViewModelProtocol) -> UIFont {
         return UIFont(name: "Arial", size: 11)!
     }
 
-    open func senderIdTextColor() -> UIColor {
+    open func senderIdTextColor(viewModel: MessageViewModelProtocol) -> UIColor {
         return UIColor.purple
     }
 
-    open func senderIdHeight() -> CGFloat {
+    open func senderIdHeight(viewModel: MessageViewModelProtocol) -> CGFloat {
         return 18
     }
 
-    open func senderIdHorizontalOffset() -> CGFloat {
+    open func senderIdHorizontalOffset(viewModel: MessageViewModelProtocol) -> CGFloat {
         return 52
     }
 }

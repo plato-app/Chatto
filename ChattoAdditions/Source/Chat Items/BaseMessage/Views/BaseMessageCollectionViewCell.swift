@@ -34,10 +34,10 @@ public protocol BaseMessageCollectionViewCellStyleProtocol {
     func selectionIndicatorIcon(for viewModel: MessageViewModelProtocol) -> UIImage
     func attributedStringForDate(_ date: String) -> NSAttributedString
     func layoutConstants(viewModel: MessageViewModelProtocol) -> BaseMessageCollectionViewCellLayoutConstants
-    func senderIdFont() -> UIFont
-    func senderIdTextColor() -> UIColor
-    func senderIdHeight() -> CGFloat
-    func senderIdHorizontalOffset() -> CGFloat
+    func senderIdFont(viewModel: MessageViewModelProtocol) -> UIFont
+    func senderIdTextColor(viewModel: MessageViewModelProtocol) -> UIColor
+    func senderIdHeight(viewModel: MessageViewModelProtocol) -> CGFloat
+    func senderIdHorizontalOffset(viewModel: MessageViewModelProtocol) -> CGFloat
 }
 
 public struct BaseMessageCollectionViewCellLayoutConstants {
@@ -247,8 +247,8 @@ open class BaseMessageCollectionViewCell<BubbleViewType>: UICollectionViewCell, 
                                   with style: BaseMessageCollectionViewCellStyleProtocol) {
         self.senderIdView.isHidden = !viewModel.decorationAttributes.isShowingSenderId
         self.senderIdView.text = viewModel.senderId
-        self.senderIdView.font = style.senderIdFont()
-        self.senderIdView.textColor = style.senderIdTextColor()
+        self.senderIdView.font = style.senderIdFont(viewModel: viewModel)
+        self.senderIdView.textColor = style.senderIdTextColor(viewModel: viewModel)
         if viewModel.isIncoming {
             self.senderIdView.textAlignment = .left
         } else {
@@ -309,8 +309,8 @@ open class BaseMessageCollectionViewCell<BubbleViewType>: UICollectionViewCell, 
             selectionIndicatorSize: self.baseStyle.selectionIndicatorIcon(for: self.messageViewModel).size,
             selectionIndicatorMargins: self.baseStyle.selectionIndicatorMargins,
             showSenderId: self.messageViewModel.decorationAttributes.isShowingAvatar,
-            senderIdViewHeight: self.baseStyle.senderIdHeight(),
-            senderIdHorizontalOffset: self.baseStyle.senderIdHorizontalOffset()
+            senderIdViewHeight: self.baseStyle.senderIdHeight(viewModel: self.messageViewModel),
+            senderIdHorizontalOffset: self.baseStyle.senderIdHorizontalOffset(viewModel: self.messageViewModel)
         )
         var layoutModel = Layout()
         layoutModel.calculateLayout(parameters: parameters)
