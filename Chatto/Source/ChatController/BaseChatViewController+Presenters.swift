@@ -100,7 +100,9 @@ extension BaseChatViewController: ChatCollectionViewLayoutDelegate {
     }
 
     @objc(collectionView:performAction:forItemAtIndexPath:withSender:)
-    open func collectionView(_ collectionView: UICollectionView, performAction action: Selector, forItemAt indexPath: IndexPath, withSender sender: Any?) {
+    open func collectionView(_ collectionView: UICollectionView, performAction action: Selector, forItemAt indexPath: IndexPath?, withSender sender: Any?) {
+        // Same as the two methods above, this indexPath could be nil due to the UIKit issue
+        guard let indexPath = indexPath else { return }
         self.presenterForIndexPath(indexPath).performMenuControllerAction(action)
     }
 
