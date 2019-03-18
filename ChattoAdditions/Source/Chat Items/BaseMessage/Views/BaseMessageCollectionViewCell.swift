@@ -199,6 +199,8 @@ open class BaseMessageCollectionViewCell<BubbleViewType>: UICollectionViewCell, 
     open override func prepareForReuse() {
         super.prepareForReuse()
         self.removeAccessoryView()
+        self.senderIdView?.removeFromSuperview()
+        self.senderIdView = nil
     }
 
     public private(set) lazy var failedButton: UIButton = {
