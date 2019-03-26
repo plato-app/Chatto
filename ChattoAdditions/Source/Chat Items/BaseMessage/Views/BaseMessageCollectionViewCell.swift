@@ -253,6 +253,13 @@ open class BaseMessageCollectionViewCell<BubbleViewType>: UICollectionViewCell, 
             if let sView = self.senderIdView {
                 // for sure it is not null
                 senderIdViewContainer.addSubview(sView)
+                if viewModel.isIncoming {
+                    let constraint = NSLayoutConstraint(item: sView, attribute: .leading, relatedBy: .equal, toItem: senderIdViewContainer, attribute: .leading, multiplier: 1, constant: 0)
+                    senderIdViewContainer.addConstraint(constraint)
+                } else {
+                    let constraint = NSLayoutConstraint(item: sView, attribute: .trailing, relatedBy: .equal, toItem: senderIdViewContainer, attribute: .trailing, multiplier: 1, constant: 0)
+                    senderIdViewContainer.addConstraint(constraint)
+                }
             }
         }
     }
@@ -271,9 +278,6 @@ open class BaseMessageCollectionViewCell<BubbleViewType>: UICollectionViewCell, 
         self.selectionIndicator.bma_rect = layout.selectionIndicatorFrame
 
         self.senderIdViewContainer.frame = layout.senderIdViewFrame
-        if let sView =  self.senderIdView {
-            sView.frame = self.senderIdViewContainer.bounds
-        }
 
         if self.accessoryTimestampView.superview != nil {
             let layoutConstants = baseStyle.layoutConstants(viewModel: messageViewModel)
