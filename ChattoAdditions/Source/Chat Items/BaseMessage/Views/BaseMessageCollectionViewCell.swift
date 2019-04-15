@@ -254,10 +254,10 @@ open class BaseMessageCollectionViewCell<BubbleViewType>: UICollectionViewCell, 
                 // for sure it is not null
                 senderIdViewContainer.addSubview(sView)
                 if viewModel.isIncoming {
-                    let constraint = NSLayoutConstraint(item: sView, attribute: .leading, relatedBy: .equal, toItem: senderIdViewContainer, attribute: .leading, multiplier: 1, constant: 0)
+                    let constraint = NSLayoutConstraint(item: sView, attribute: .left, relatedBy: .equal, toItem: senderIdViewContainer, attribute: .left, multiplier: 1, constant: 0)
                     senderIdViewContainer.addConstraint(constraint)
                 } else {
-                    let constraint = NSLayoutConstraint(item: sView, attribute: .trailing, relatedBy: .equal, toItem: senderIdViewContainer, attribute: .trailing, multiplier: 1, constant: 0)
+                    let constraint = NSLayoutConstraint(item: sView, attribute: .right, relatedBy: .equal, toItem: senderIdViewContainer, attribute: .right, multiplier: 1, constant: 0)
                     senderIdViewContainer.addConstraint(constraint)
                 }
             }
