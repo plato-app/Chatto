@@ -25,6 +25,7 @@
 import UIKit
 
 protocol ChatInputBarPresenter: class {
+    var focusedItem: ChatInputItemProtocol? { get }
     var chatInputBar: ChatInputBar { get }
     func onDidBeginEditing()
     func onDidEndEditing()
@@ -188,36 +189,5 @@ extension BasicChatInputBarPresenter {
         self.chatInputBar.showsSendButton = item.showsSendButton
         self.chatInputBar.showsTextView = item.presentationMode == .keyboard
         self.updateFirstResponderWithInputItem(item)
-    }
-}
-
-private class InputContainerView: UIInputView {
-
-    var contentHeight: CGFloat = 0 {
-        didSet {
-            self.invalidateIntrinsicContentSize()
-        }
-    }
-
-    var contentView: UIView? {
-        willSet {
-            self.contentView?.removeFromSuperview()
-        }
-        didSet {
-            if let contentView = self.contentView {
-                contentView.frame = self.bounds
-                self.addSubview(contentView)
-                self.setNeedsLayout()
-            }
-        }
-    }
-
-    override func layoutSubviews() {
-        super.layoutSubviews()
-        self.contentView?.frame = self.bounds
-    }
-
-    override var intrinsicContentSize: CGSize {
-        return CGSize(width: UIView.noIntrinsicMetric, height: self.contentHeight)
     }
 }

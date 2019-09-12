@@ -20,28 +20,20 @@
  LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
  OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  THE SOFTWARE.
-*/
+ */
+import UIKit
 
-@import UIKit;
+public protocol InputPositionControlling: AnyObject {
 
-typedef NS_ENUM(NSUInteger, CircleIconType) {
-  CircleIconTypeUndefined,
+    var keyboardStatus: KeyboardStatus { get }
 
-  CircleIconTypeInfinity,
-  CircleIconTypeExclamation,
-  CircleIconTypeCheck,
+    var inputBarContainer: UIView! { get }
+    var maximumInputSize: CGSize { get }
 
-  CircleIconTypeArrowDown,
-  CircleIconTypeArrowUp,
-  CircleIconTypeStop,
+    var inputContentContainer: UIView! { get }
+    var inputContentBottomMargin: CGFloat { get }
 
-  CircleIconTypeText
-};
-
-@interface CircleIconView : UIView
-- (void)setType:(CircleIconType)type;
-- (void)setTitle:(NSAttributedString *)title;
-
-- (void)setLineWidth:(CGFloat)lineWidth;
-- (void)setLineColor:(UIColor *)lineColor;
-@end
+    func changeInputContentBottomMarginTo(_ newValue: CGFloat, animated: Bool, callback: (() -> Void)?)
+    func changeInputContentBottomMarginTo(_ newValue: CGFloat, animated: Bool, duration: CFTimeInterval, initialSpringVelocity: CGFloat, callback: (() -> Void)?)
+    func changeInputContentBottomMarginTo(_ newValue: CGFloat, animated: Bool, duration: CFTimeInterval, timingFunction: CAMediaTimingFunction, callback: (() -> Void)?)
+}
