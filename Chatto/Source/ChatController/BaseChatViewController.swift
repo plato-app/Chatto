@@ -112,7 +112,7 @@ open class BaseChatViewController: UIViewController, UICollectionViewDataSource,
         self.addBottomSpaceView()
         self.setupKeyboardTracker()
         self.setupTapGestureRecognizer()
-        if let status = keyboardTracker?.keyboardStatus {
+        if let status = keyboardTracker?.getStatus() {
             self.setUserInteraction(withStatus: status)
         }
     }
