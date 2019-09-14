@@ -195,6 +195,10 @@ class KeyboardTracker {
         self.layoutBlock(constraint, self.keyboardStatus)
         self.isPerformingForcedLayout = false
     }
+
+    func getStatus() -> KeyboardStatus {
+        return keyboardStatus
+    }
 }
 
 private class KeyboardTrackingView: UIView {

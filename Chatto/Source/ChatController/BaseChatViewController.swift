@@ -112,6 +112,9 @@ open class BaseChatViewController: UIViewController, UICollectionViewDataSource,
         self.addBottomSpaceView()
         self.setupKeyboardTracker()
         self.setupTapGestureRecognizer()
+        if let status = keyboardTracker?.getStatus() {
+            self.setUserInteraction(withStatus: status)
+        }
     }
 
     private func setupTapGestureRecognizer() {
@@ -236,11 +239,16 @@ open class BaseChatViewController: UIViewController, UICollectionViewDataSource,
     }
 
     open func handleKeyboardPositionChange(bottomMargin: CGFloat, keyboardStatus: KeyboardStatus) {
+        setUserInteraction(withStatus: keyboardStatus)
         guard self.inputContainerBottomConstraint.constant != bottomMargin else { return }
         self.isAdjustingInputContainer = true
         self.inputContainerBottomConstraint.constant = max(bottomMargin, self.bottomLayoutGuide.length)
         self.view.layoutIfNeeded()
         self.isAdjustingInputContainer = false
+    }
+
+    open func setUserInteraction(withStatus keyboardStatus: KeyboardStatus) {
+        // default implementation is to do nothing
     }
 
     var notificationCenter = NotificationCenter.default
