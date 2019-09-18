@@ -154,7 +154,8 @@ open class BaseChatViewController: UIViewController, UICollectionViewDataSource,
         self.view.addSubview(collectionView)
         self.view.addConstraint(NSLayoutConstraint(item: self.view, attribute: .top, relatedBy: .equal, toItem: collectionView, attribute: .top, multiplier: 1, constant: 0))
         self.view.addConstraint(NSLayoutConstraint(item: self.view, attribute: .leading, relatedBy: .equal, toItem: collectionView, attribute: .leading, multiplier: 1, constant: 0))
-        self.view.addConstraint(NSLayoutConstraint(item: self.view, attribute: .bottom, relatedBy: .equal, toItem: collectionView, attribute: .bottom, multiplier: 1, constant: 0))
+        let bottomSpaceHeight = getCollectionViewBottomSpaceHeight()
+        self.view.addConstraint(NSLayoutConstraint(item: self.view, attribute: .bottom, relatedBy: .equal, toItem: collectionView, attribute: .bottom, multiplier: 1, constant: bottomSpaceHeight))
         self.view.addConstraint(NSLayoutConstraint(item: self.view, attribute: .trailing, relatedBy: .equal, toItem: collectionView, attribute: .trailing, multiplier: 1, constant: 0))
         collectionView.dataSource = self
         collectionView.delegate = self
@@ -166,6 +167,11 @@ open class BaseChatViewController: UIViewController, UICollectionViewDataSource,
         if !self.customPresentersConfigurationPoint {
             self.confugureCollectionViewWithPresenters()
         }
+    }
+
+    // The space between collectionView bottom and self.view.bottom
+    open func getCollectionViewBottomSpaceHeight() -> CGFloat {
+        return 0
     }
 
     var unfinishedBatchUpdatesCount: Int = 0
