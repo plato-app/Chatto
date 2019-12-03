@@ -20,14 +20,37 @@
  LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
  OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  THE SOFTWARE.
-*/
+ */
 
-#import <UIKit/UIKit.h>
+import UIKit
 
-//! Project version number for Chatto.
-FOUNDATION_EXPORT double ChattoVersionNumber;
+open class InputContainerView: UIInputView {
 
-//! Project version string for Chatto.
-FOUNDATION_EXPORT const unsigned char ChattoVersionString[];
+    public var contentHeight: CGFloat = 0 {
+        didSet {
+            self.invalidateIntrinsicContentSize()
+        }
+    }
 
-// In this header, you should import all the public headers of your framework using statements like #import <Chatto/PublicHeader.h>
+    public var contentView: UIView? {
+        willSet {
+            self.contentView?.removeFromSuperview()
+        }
+        didSet {
+            if let contentView = self.contentView {
+                contentView.frame = self.bounds
+                self.addSubview(contentView)
+                self.setNeedsLayout()
+            }
+        }
+    }
+
+    override open func layoutSubviews() {
+        super.layoutSubviews()
+        self.contentView?.frame = self.bounds
+    }
+
+    override open var intrinsicContentSize: CGSize {
+        return CGSize(width: UIView.noIntrinsicMetric, height: self.contentHeight)
+    }
+}

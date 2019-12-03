@@ -22,7 +22,7 @@
  THE SOFTWARE.
 */
 
-import Foundation
+import UIKit
 
 public enum CellVerticalEdge {
     case top
@@ -151,6 +151,11 @@ extension BaseChatViewController {
         if collectionView.isDragging {
             self.autoLoadMoreContentIfNeeded()
         }
+        self.scrollViewEventsHandler?.onScrollViewDidScroll(scrollView)
+    }
+
+    open func scrollViewDidEndDragging(_ scrollView: UIScrollView, willDecelerate decelerate: Bool) {
+        self.scrollViewEventsHandler?.onScrollViewDidEndDragging(scrollView, decelerate)
     }
 
     open func scrollViewDidScrollToTop(_ scrollView: UIScrollView) {

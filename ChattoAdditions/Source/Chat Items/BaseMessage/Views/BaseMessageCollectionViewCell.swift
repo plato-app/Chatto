@@ -101,7 +101,9 @@ open class BaseMessageCollectionViewCell<BubbleViewType>: UICollectionViewCell, 
 
     open var messageViewModel: MessageViewModelProtocol! {
         didSet {
+            oldValue?.avatarImage.removeObserver(self)
             self.updateViews()
+            self.observeAvatar()
         }
     }
 
@@ -133,7 +135,7 @@ open class BaseMessageCollectionViewCell<BubbleViewType>: UICollectionViewCell, 
     }
 
     public private(set) var avatarView: UIImageView!
-    func createAvatarView() -> UIImageView! {
+    open func createAvatarView() -> UIImageView! {
         let avatarImageView = UIImageView(frame: CGRect.zero)
         avatarImageView.isUserInteractionEnabled = true
         return avatarImageView
@@ -154,11 +156,13 @@ open class BaseMessageCollectionViewCell<BubbleViewType>: UICollectionViewCell, 
 
     public private(set) lazy var tapGestureRecognizer: UITapGestureRecognizer = {
         let tapGestureRecognizer = UITapGestureRecognizer(target: self, action: #selector(BaseMessageCollectionViewCell.bubbleTapped(_:)))
+        tapGestureRecognizer.delegate = self
         return tapGestureRecognizer
     }()
 
     public private (set) lazy var longPressGestureRecognizer: UILongPressGestureRecognizer = {
         let longpressGestureRecognizer = UILongPressGestureRecognizer(target: self, action: #selector(BaseMessageCollectionViewCell.bubbleLongPressed(_:)))
+        longpressGestureRecognizer.cancelsTouchesInView = true
         longpressGestureRecognizer.delegate = self
         return longpressGestureRecognizer
     }()
@@ -175,6 +179,7 @@ open class BaseMessageCollectionViewCell<BubbleViewType>: UICollectionViewCell, 
         self.bubbleView.isExclusiveTouch = true
         self.bubbleView.addGestureRecognizer(self.tapGestureRecognizer)
         self.bubbleView.addGestureRecognizer(self.longPressGestureRecognizer)
+        self.tapGestureRecognizer.require(toFail: self.longPressGestureRecognizer)
         self.contentView.addSubview(self.avatarView)
         self.contentView.addSubview(self.bubbleView)
         self.contentView.addSubview(self.failedButton)
@@ -193,7 +198,24 @@ open class BaseMessageCollectionViewCell<BubbleViewType>: UICollectionViewCell, 
     }
 
     open func gestureRecognizer(_ gestureRecognizer: UIGestureRecognizer, shouldRecognizeSimultaneouslyWith otherGestureRecognizer: UIGestureRecognizer) -> Bool {
-        return gestureRecognizer === self.longPressGestureRecognizer
+        let allowLongPressGestureRecognizerToBeRecognizedWithAnyOtherGestureRecognizersExceptTapGestures = gestureRecognizer === self.longPressGestureRecognizer && !(otherGestureRecognizer is UITapGestureRecognizer)
+        let allowTapGestureRecognizerToBeRecognizedWithOtherTapGestures = gestureRecognizer === self.tapGestureRecognizer && otherGestureRecognizer is UITapGestureRecognizer
+        return allowLongPressGestureRecognizerToBeRecognizedWithAnyOtherGestureRecognizersExceptTapGestures
+            || allowTapGestureRecognizerToBeRecognizedWithOtherTapGestures
+    }
+
+    public func gestureRecognizer(_ gestureRecognizer: UIGestureRecognizer, shouldRequireFailureOf otherGestureRecognizer: UIGestureRecognizer) -> Bool {
+        if gestureRecognizer is UITapGestureRecognizer {
+            let allowTapGesturestToWaitUntilLongPressGesturesFail = otherGestureRecognizer == self.longPressGestureRecognizer
+            return allowTapGesturestToWaitUntilLongPressGesturesFail
+        }
+
+        guard let otherLongPressGestureRecognizer = otherGestureRecognizer as? UILongPressGestureRecognizer else {
+            return false
+        }
+
+        let allowLongPressGestureToWaitUntilOtherLongPressGesturesWithSingleTouchFail = gestureRecognizer == self.longPressGestureRecognizer && otherLongPressGestureRecognizer.numberOfTouchesRequired == 1
+        return allowLongPressGestureToWaitUntilOtherLongPressGesturesWithSingleTouchFail
     }
 
     open override func prepareForReuse() {
@@ -235,13 +257,14 @@ open class BaseMessageCollectionViewCell<BubbleViewType>: UICollectionViewCell, 
         self.layoutIfNeeded()
     }
 
-    private func updateAvatarView(from viewModel: MessageViewModelProtocol,
-                                  with style: BaseMessageCollectionViewCellStyleProtocol) {
+    private func observeAvatar() {
+        guard self.viewContext != .sizing else { return }
+        guard let viewModel = self.messageViewModel else { return }
         self.avatarView.isHidden = !viewModel.decorationAttributes.isShowingAvatar
-
-        let avatarImageSize = style.avatarSize(viewModel: viewModel)
-        if avatarImageSize != .zero {
-            self.avatarView.image = viewModel.avatarImage.value
+        self.avatarView.image = viewModel.avatarImage.value
+        viewModel.avatarImage.observe(self) { [weak self] _, new in
+            guard let self = self else { return }
+            self.avatarView.image = new
         }
     }
 
@@ -301,7 +324,7 @@ open class BaseMessageCollectionViewCell<BubbleViewType>: UICollectionViewCell, 
     }
 
     private func calculateLayout(availableWidth: CGFloat) -> Layout {
-        let layoutConstants = baseStyle.layoutConstants(viewModel: messageViewModel)
+        let layoutConstants = self.baseStyle.layoutConstants(viewModel: self.messageViewModel)
         let parameters = LayoutParameters(
             containerWidth: availableWidth,
             horizontalMargin: layoutConstants.horizontalMargin,

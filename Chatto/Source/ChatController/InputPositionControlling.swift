@@ -20,15 +20,20 @@
  LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
  OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  THE SOFTWARE.
-*/
+ */
+import UIKit
 
-@import UIKit;
+public protocol InputPositionControlling: AnyObject {
 
-@interface CircleProgressView : UIView
-- (void)prepareForLoading;
-- (void)finishPrepareForLoading;
-- (void)setProgress:(CGFloat)progress;
+    var keyboardStatus: KeyboardStatus { get }
 
-- (void)setLineWidth:(CGFloat)lineWidth;
-- (void)setLineColor:(UIColor *)lineColor;
-@end
+    var inputBarContainer: UIView! { get }
+    var maximumInputSize: CGSize { get }
+
+    var inputContentContainer: UIView! { get }
+    var inputContentBottomMargin: CGFloat { get }
+
+    func changeInputContentBottomMarginTo(_ newValue: CGFloat, animated: Bool, callback: (() -> Void)?)
+    func changeInputContentBottomMarginTo(_ newValue: CGFloat, animated: Bool, duration: CFTimeInterval, initialSpringVelocity: CGFloat, callback: (() -> Void)?)
+    func changeInputContentBottomMarginTo(_ newValue: CGFloat, animated: Bool, duration: CFTimeInterval, timingFunction: CAMediaTimingFunction, callback: (() -> Void)?)
+}

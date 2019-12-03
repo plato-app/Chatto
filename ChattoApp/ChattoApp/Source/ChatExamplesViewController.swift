@@ -35,9 +35,14 @@ class ChatExamplesViewController: CellsViewController {
             self.makeOverviewCellItem(),
             self.makeChatCellItem(title: "Empty chat", messagesCount: 0),
             self.makeChatCellItem(title: "Chat with 10000 messages", messagesCount: 10_000),
+            self.makeChatCellItem(title: "Chat with expandable input", messagesCount: 10_000, shouldUseAlternativePresenter: true),
             self.makeMessageSelectionCellItem(),
             self.makeOpenWithTabBarCellItem(),
-            self.makeScrollToBottomCellItem()
+            self.makeScrollToBottomCellItem(),
+            self.makeCompoundDemoViewController(),
+            self.makeUpdateItemTypeViewController(),
+            self.makeTestItemsReloadingCellItem(),
+            self.makeAsyncAvatarLoadingCellItem()
         ]
     }
 
@@ -52,11 +57,12 @@ class ChatExamplesViewController: CellsViewController {
         })
     }
 
-    private func makeChatCellItem(title: String, messagesCount: Int) -> CellItem {
+    private func makeChatCellItem(title: String, messagesCount: Int, shouldUseAlternativePresenter: Bool = false) -> CellItem {
         return CellItem(title: title, action: { [weak self] in
             let dataSource = DemoChatDataSource(count: messagesCount, pageSize: 50)
             let viewController = AddRandomMessagesChatViewController()
             viewController.dataSource = dataSource
+            viewController.shouldUseAlternativePresenter = shouldUseAlternativePresenter
             self?.navigationController?.pushViewController(viewController, animated: true)
         })
     }
@@ -95,6 +101,34 @@ class ChatExamplesViewController: CellsViewController {
             viewController.dataSource = dataSource
             self?.navigationController?.pushViewController(viewController, animated: true)
         })
+    }
+
+    private func makeUpdateItemTypeViewController() -> CellItem {
+        return CellItem(title: "Dynamically change item type") { [unowned self] in
+            self.navigationController?.pushViewController(UpdateItemTypeViewController(), animated: true)
+        }
+    }
+
+    private func makeCompoundDemoViewController() -> CellItem {
+        return CellItem(title: "Compound message examples") { [unowned self] in
+            let messages = DemoChatMessageFactory.makeCompoundMessages()
+            let dataSource = DemoChatDataSource(messages: messages, pageSize: 50)
+            let viewController = DemoChatViewController()
+            viewController.dataSource = dataSource
+            self.navigationController?.pushViewController(viewController, animated: true)
+        }
+    }
+
+    private func makeTestItemsReloadingCellItem() -> CellItem {
+        return CellItem(title: "Test items reloading") { [unowned self] in
+            self.navigationController?.pushViewController(TestItemsReloadingViewController(), animated: true)
+        }
+    }
+
+    private func makeAsyncAvatarLoadingCellItem() -> CellItem {
+        return CellItem(title: "Async avatar loading") { [unowned self] in
+            self.navigationController?.pushViewController(AsyncAvatarLoadingViewController(), animated: true)
+        }
     }
 
     @objc
