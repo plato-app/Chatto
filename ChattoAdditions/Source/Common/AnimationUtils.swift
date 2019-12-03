@@ -22,6 +22,8 @@
  THE SOFTWARE.
 */
 
+import UIKit
+
 public extension CABasicAnimation {
     class func bma_fadeInAnimationWithDuration(_ duration: CFTimeInterval) -> CABasicAnimation {
         let animation = CABasicAnimation(keyPath: "opacity")
@@ -35,7 +37,7 @@ public extension CABasicAnimation {
 }
 
 public extension CATransaction {
-    public static func performWithDisabledActions(block: () -> Void) {
+    static func performWithDisabledActions(block: () -> Void) {
         self.begin()
         self.setDisableActions(true)
         block()

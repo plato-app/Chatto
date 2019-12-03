@@ -102,7 +102,9 @@ open class BaseMessageCollectionViewCell<BubbleViewType>: UICollectionViewCell, 
 
     open var messageViewModel: MessageViewModelProtocol! {
         didSet {
+            oldValue?.avatarImage.removeObserver(self)
             self.updateViews()
+            self.observeAvatar()
         }
     }
 
@@ -134,7 +136,7 @@ open class BaseMessageCollectionViewCell<BubbleViewType>: UICollectionViewCell, 
     }
 
     public private(set) var avatarView: UIImageView!
-    func createAvatarView() -> UIImageView! {
+    open func createAvatarView() -> UIImageView! {
         let avatarImageView = UIImageView(frame: CGRect.zero)
         avatarImageView.isUserInteractionEnabled = true
         return avatarImageView
@@ -253,13 +255,14 @@ open class BaseMessageCollectionViewCell<BubbleViewType>: UICollectionViewCell, 
         self.layoutIfNeeded()
     }
 
-    private func updateAvatarView(from viewModel: MessageViewModelProtocol,
-                                  with style: BaseMessageCollectionViewCellStyleProtocol) {
+    private func observeAvatar() {
+        guard self.viewContext != .sizing else { return }
+        guard let viewModel = self.messageViewModel else { return }
         self.avatarView.isHidden = !viewModel.decorationAttributes.isShowingAvatar
-
-        let avatarImageSize = style.avatarSize(viewModel: viewModel)
-        if avatarImageSize != .zero {
-            self.avatarView.image = viewModel.avatarImage.value
+        self.avatarView.image = viewModel.avatarImage.value
+        viewModel.avatarImage.observe(self) { [weak self] _, new in
+            guard let self = self else { return }
+            self.avatarView.image = new
         }
     }
 
