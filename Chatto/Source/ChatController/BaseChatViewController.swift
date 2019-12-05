@@ -456,8 +456,8 @@ open class BaseChatViewController: UIViewController, UICollectionViewDataSource,
         self.enqueueModelUpdate(updateType: .normal)
     }
 
-    public var keyboardStatus: KeyboardStatus {
-        return self.keyboardTracker.keyboardStatus
+    public var keyboardStatus: KeyboardStatus? {
+        return self.keyboardTracker?.keyboardStatus
     }
 
     public var maximumInputSize: CGSize {
