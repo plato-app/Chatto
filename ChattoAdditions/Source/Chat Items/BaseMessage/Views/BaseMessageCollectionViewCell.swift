@@ -246,7 +246,6 @@ open class BaseMessageCollectionViewCell<BubbleViewType>: UICollectionViewCell, 
             self.failedButton.alpha = 0
         }
         self.accessoryTimestampView.attributedText = style.attributedStringForDate(viewModel.date)
-        self.updateAvatarView(from: viewModel, with: style)
         self.updateSenderIdView(from: viewModel, with: style)
         self.updateSelectionIndicator(with: style)
 
