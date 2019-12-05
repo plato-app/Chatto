@@ -172,6 +172,7 @@ open class BaseChatViewController: UIViewController, UICollectionViewDataSource,
         collectionView.delegate = self
         collectionView.chatto_setContentInsetAdjustment(enabled: false, in: self)
         collectionView.chatto_setAutomaticallyAdjustsScrollIndicatorInsets(false)
+        collectionView.chatto_setIsPrefetchingEnabled(false)
         
         self.accessoryViewRevealer = AccessoryViewRevealer(collectionView: collectionView)
         self.collectionView = collectionView
