@@ -44,7 +44,7 @@ public class AvatarView: UIView, HasAvatarImage {
 }
 
 public protocol HasAvatarImage {
-    public func setAvatarImage(image: UIImage?)
+    func setAvatarImage(image: UIImage?)
 }
 
 public struct BaseMessageCollectionViewCellLayoutConstants {
