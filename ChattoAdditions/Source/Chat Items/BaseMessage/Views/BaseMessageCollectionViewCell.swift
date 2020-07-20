@@ -40,7 +40,7 @@ public protocol BaseMessageCollectionViewCellStyleProtocol {
 }
 
 public class AvatarView: UIView, HasAvatarImage {
-    public func setAvatarImage(image: UIImage?) { }
+    open func setAvatarImage(image: UIImage?) { }
 }
 
 public protocol HasAvatarImage {
