@@ -161,7 +161,8 @@ open class BaseChatViewController: UIViewController, UICollectionViewDataSource,
         collectionView.autoresizingMask = []
         self.view.addSubview(collectionView)
         self.view.addConstraint(NSLayoutConstraint(item: self.view, attribute: .top, relatedBy: .equal, toItem: collectionView, attribute: .top, multiplier: 1, constant: 0))
-        self.view.addConstraint(NSLayoutConstraint(item: self.view, attribute: .bottom, relatedBy: .equal, toItem: collectionView, attribute: .bottom, multiplier: 1, constant: 0))
+        let bottomSpaceHeight = getCollectionViewBottomSpaceHeight()
+        self.view.addConstraint(NSLayoutConstraint(item: self.view, attribute: .bottom, relatedBy: .equal, toItem: collectionView, attribute: .bottom, multiplier: 1, constant: bottomSpaceHeight))
 
         let leadingAnchor: NSLayoutXAxisAnchor
         let trailingAnchor: NSLayoutXAxisAnchor
@@ -191,6 +192,11 @@ open class BaseChatViewController: UIViewController, UICollectionViewDataSource,
         if !self.customPresentersConfigurationPoint {
             self.confugureCollectionViewWithPresenters()
         }
+    }
+
+    // The space between collectionView bottom and self.view.bottom
+    open func getCollectionViewBottomSpaceHeight() -> CGFloat {
+        return 0
     }
 
     var unfinishedBatchUpdatesCount: Int = 0
@@ -294,6 +300,15 @@ open class BaseChatViewController: UIViewController, UICollectionViewDataSource,
         self.keyboardTracker = KeyboardTracker(viewController: self, inputBarContainer: self.inputBarContainer, heightBlock: heightBlock, notificationCenter: self.notificationCenter)
 
         (self.view as? BaseChatViewControllerViewProtocol)?.bmaInputAccessoryView = self.keyboardTracker?.trackingView
+
+    }
+
+    open func handleKeyboardPositionChange(bottomMargin: CGFloat, keyboardStatus: KeyboardStatus) {
+        guard self.inputContainerBottomConstraint.constant != bottomMargin else { return }
+        self.isAdjustingInputContainer = true
+        self.inputContainerBottomConstraint.constant = max(bottomMargin, self.bottomLayoutGuide.length)
+        self.view.layoutIfNeeded()
+        self.isAdjustingInputContainer = false
     }
 
     var notificationCenter = NotificationCenter.default
@@ -462,8 +477,8 @@ open class BaseChatViewController: UIViewController, UICollectionViewDataSource,
         self.enqueueModelUpdate(updateType: .normal)
     }
 
-    public var keyboardStatus: KeyboardStatus {
-        return self.keyboardTracker.keyboardStatus
+    public var keyboardStatus: KeyboardStatus? {
+        return self.keyboardTracker?.keyboardStatus
     }
 
     public var maximumInputSize: CGSize {

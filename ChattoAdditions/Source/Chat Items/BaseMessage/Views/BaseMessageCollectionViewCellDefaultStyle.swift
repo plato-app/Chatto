@@ -109,24 +109,6 @@ open class BaseMessageCollectionViewCellDefaultStyle: BaseMessageCollectionViewC
     let outgoingAvatarStyle: AvatarStyle
     let selectionIndicatorStyle: SelectionIndicatorStyle
 
-    public convenience init(
-        colors: Colors = BaseMessageCollectionViewCellDefaultStyle.createDefaultColors(),
-        bubbleBorderImages: BubbleBorderImages? = BaseMessageCollectionViewCellDefaultStyle.createDefaultBubbleBorderImages(),
-        failedIconImages: FailedIconImages = BaseMessageCollectionViewCellDefaultStyle.createDefaultFailedIconImages(),
-        layoutConstants: BaseMessageCollectionViewCellLayoutConstants = BaseMessageCollectionViewCellDefaultStyle.createDefaultLayoutConstants(),
-        dateTextStyle: DateTextStyle = BaseMessageCollectionViewCellDefaultStyle.createDefaultDateTextStyle(),
-        avatarStyle: AvatarStyle = AvatarStyle(),
-        selectionIndicatorStyle: SelectionIndicatorStyle = BaseMessageCollectionViewCellDefaultStyle.createDefaultSelectionIndicatorStyle()) {
-        self.init(colors: colors,
-                  bubbleBorderImages: bubbleBorderImages,
-                  failedIconImages: failedIconImages,
-                  layoutConstants: layoutConstants,
-                  dateTextStyle: dateTextStyle,
-                  incomingAvatarStyle: avatarStyle,
-                  outgoingAvatarStyle: avatarStyle,
-                  selectionIndicatorStyle: selectionIndicatorStyle)
-    }
-
     public init(
         colors: Colors = BaseMessageCollectionViewCellDefaultStyle.createDefaultColors(),
         bubbleBorderImages: BubbleBorderImages? = BaseMessageCollectionViewCellDefaultStyle.createDefaultBubbleBorderImages(),
@@ -206,19 +188,15 @@ open class BaseMessageCollectionViewCellDefaultStyle: BaseMessageCollectionViewC
         return viewModel.isIncoming ? self.incomingAvatarStyle : self.outgoingAvatarStyle
     }
  
-    open func senderIdFont() -> UIFont {
-        return UIFont(name: "Arial", size: 11)!
+    open func senderIdView(viewModel: MessageViewModelProtocol) -> UIView {
+        return UILabel()
     }
 
-    open func senderIdTextColor() -> UIColor {
-        return UIColor.purple
-    }
-
-    open func senderIdHeight() -> CGFloat {
+    open func senderIdHeight(viewModel: MessageViewModelProtocol) -> CGFloat {
         return 18
     }
 
-    open func senderIdHorizontalOffset() -> CGFloat {
+    open func senderIdHorizontalOffset(viewModel: MessageViewModelProtocol) -> CGFloat {
         return 52
     }
 }

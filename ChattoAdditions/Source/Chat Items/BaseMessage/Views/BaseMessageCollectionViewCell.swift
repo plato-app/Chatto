@@ -34,10 +34,9 @@ public protocol BaseMessageCollectionViewCellStyleProtocol {
     func selectionIndicatorIcon(for viewModel: MessageViewModelProtocol) -> UIImage
     func attributedStringForDate(_ date: String) -> NSAttributedString
     func layoutConstants(viewModel: MessageViewModelProtocol) -> BaseMessageCollectionViewCellLayoutConstants
-    func senderIdFont() -> UIFont
-    func senderIdTextColor() -> UIColor
-    func senderIdHeight() -> CGFloat
-    func senderIdHorizontalOffset() -> CGFloat
+    func senderIdView(viewModel: MessageViewModelProtocol) -> UIView
+    func senderIdHeight(viewModel: MessageViewModelProtocol) -> CGFloat
+    func senderIdHorizontalOffset(viewModel: MessageViewModelProtocol) -> CGFloat
 }
 
 public struct BaseMessageCollectionViewCellLayoutConstants {
@@ -147,7 +146,8 @@ open class BaseMessageCollectionViewCell<BubbleViewType>: UICollectionViewCell, 
         return avatarImageView
     }
 
-    public private(set) var senderIdView = UILabel()
+    public private(set) var senderIdViewContainer = UIView()
+    private var senderIdView: UIView?
 
     public override init(frame: CGRect) {
         super.init(frame: frame)
@@ -189,7 +189,7 @@ open class BaseMessageCollectionViewCell<BubbleViewType>: UICollectionViewCell, 
         self.contentView.addSubview(self.bubbleView)
         self.contentView.addSubview(self.failedButton)
         self.contentView.addSubview(self.selectionIndicator)
-        self.contentView.addSubview(self.senderIdView)
+        self.contentView.addSubview(self.senderIdViewContainer)
         self.contentView.isExclusiveTouch = true
         self.isExclusiveTouch = true
 
@@ -226,6 +226,8 @@ open class BaseMessageCollectionViewCell<BubbleViewType>: UICollectionViewCell, 
     open override func prepareForReuse() {
         super.prepareForReuse()
         self.removeAccessoryView()
+        self.senderIdView?.removeFromSuperview()
+        self.senderIdView = nil
     }
 
     public private(set) lazy var failedButton: UIButton = {
@@ -249,7 +251,6 @@ open class BaseMessageCollectionViewCell<BubbleViewType>: UICollectionViewCell, 
             self.failedButton.alpha = 0
         }
         self.accessoryTimestampView.attributedText = style.attributedStringForDate(viewModel.date)
-        self.updateAvatarView(from: viewModel, with: style)
         self.updateSenderIdView(from: viewModel, with: style)
         self.updateSelectionIndicator(with: style)
 
@@ -273,14 +274,20 @@ open class BaseMessageCollectionViewCell<BubbleViewType>: UICollectionViewCell, 
 
     private func updateSenderIdView(from viewModel: MessageViewModelProtocol,
                                   with style: BaseMessageCollectionViewCellStyleProtocol) {
-        self.senderIdView.isHidden = !viewModel.decorationAttributes.isShowingSenderId
-        self.senderIdView.text = viewModel.senderId
-        self.senderIdView.font = style.senderIdFont()
-        self.senderIdView.textColor = style.senderIdTextColor()
-        if viewModel.isIncoming {
-            self.senderIdView.textAlignment = .left
-        } else {
-            self.senderIdView.textAlignment = .right
+        self.senderIdViewContainer.isHidden = !viewModel.decorationAttributes.isShowingSenderId
+        if self.senderIdView == nil {
+            self.senderIdView = style.senderIdView(viewModel: viewModel)
+            if let sView = self.senderIdView {
+                // for sure it is not null
+                senderIdViewContainer.addSubview(sView)
+                if viewModel.isIncoming {
+                    let constraint = NSLayoutConstraint(item: sView, attribute: .left, relatedBy: .equal, toItem: senderIdViewContainer, attribute: .left, multiplier: 1, constant: 0)
+                    senderIdViewContainer.addConstraint(constraint)
+                } else {
+                    let constraint = NSLayoutConstraint(item: sView, attribute: .right, relatedBy: .equal, toItem: senderIdViewContainer, attribute: .right, multiplier: 1, constant: 0)
+                    senderIdViewContainer.addConstraint(constraint)
+                }
+            }
         }
     }
 
@@ -323,7 +330,7 @@ open class BaseMessageCollectionViewCell<BubbleViewType>: UICollectionViewCell, 
         self.avatarView.bma_rect = layout.avatarViewFrame
         self.selectionIndicator.bma_rect = layout.selectionIndicatorFrame
 
-        self.senderIdView.frame = layout.senderIdViewFrame
+        self.senderIdViewContainer.frame = layout.senderIdViewFrame
 
         if self.accessoryTimestampView.superview != nil {
             let layoutConstants = baseStyle.layoutConstants(viewModel: messageViewModel)
@@ -369,8 +376,8 @@ open class BaseMessageCollectionViewCell<BubbleViewType>: UICollectionViewCell, 
             selectionIndicatorSize: self.baseStyle.selectionIndicatorIcon(for: self.messageViewModel).size,
             selectionIndicatorMargins: self.baseStyle.selectionIndicatorMargins,
             showSenderId: self.messageViewModel.decorationAttributes.isShowingAvatar,
-            senderIdViewHeight: self.baseStyle.senderIdHeight(),
-            senderIdHorizontalOffset: self.baseStyle.senderIdHorizontalOffset()
+            senderIdViewHeight: self.baseStyle.senderIdHeight(viewModel: self.messageViewModel),
+            senderIdHorizontalOffset: self.baseStyle.senderIdHorizontalOffset(viewModel: self.messageViewModel)
         )
         var layoutModel = Layout()
         layoutModel.calculateLayout(parameters: parameters)
