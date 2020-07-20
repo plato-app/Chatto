@@ -39,6 +39,14 @@ public protocol BaseMessageCollectionViewCellStyleProtocol {
     func senderIdHorizontalOffset(viewModel: MessageViewModelProtocol) -> CGFloat
 }
 
+public class AvatarView: UIView, HasAvatarImage {
+    func setAvatarImage(image: UIImage?) { }
+}
+
+public protocol HasAvatarImage {
+    func setAvatarImage(image: UIImage?)
+}
+
 public struct BaseMessageCollectionViewCellLayoutConstants {
     public let horizontalMargin: CGFloat
     public let horizontalInterspacing: CGFloat
@@ -134,11 +142,11 @@ open class BaseMessageCollectionViewCell<BubbleViewType>: UICollectionViewCell, 
         return nil
     }
 
-    public private(set) var avatarView: UIImageView!
-    open func createAvatarView() -> UIImageView! {
-        let avatarImageView = UIImageView(frame: CGRect.zero)
-        avatarImageView.isUserInteractionEnabled = true
-        return avatarImageView
+    public private(set) var avatarView: AvatarView!
+    open func createAvatarView() -> AvatarView! {
+        let avatarView = AvatarView(frame: CGRect.zero)
+        avatarView.isUserInteractionEnabled = true
+        return avatarView
     }
 
     public private(set) var senderIdViewContainer = UIView()
@@ -260,10 +268,10 @@ open class BaseMessageCollectionViewCell<BubbleViewType>: UICollectionViewCell, 
         guard self.viewContext != .sizing else { return }
         guard let viewModel = self.messageViewModel else { return }
         self.avatarView.isHidden = !viewModel.decorationAttributes.isShowingAvatar
-        self.avatarView.image = viewModel.avatarImage.value
+        self.avatarView.setAvatarImage(image: viewModel.avatarImage.value)
         viewModel.avatarImage.observe(self) { [weak self] _, new in
             guard let self = self else { return }
-            self.avatarView.image = new
+            self.avatarView.setAvatarImage(image: new)
         }
     }
 
