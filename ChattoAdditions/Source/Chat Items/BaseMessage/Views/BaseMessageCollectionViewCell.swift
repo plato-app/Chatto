@@ -39,7 +39,7 @@ public protocol BaseMessageCollectionViewCellStyleProtocol {
     func senderIdHorizontalOffset(viewModel: MessageViewModelProtocol) -> CGFloat
 }
 
-public class AvatarView: UIView, HasAvatarImage {
+open class AvatarView: UIView, HasAvatarImage {
     open func setAvatarImage(image: UIImage?) { }
 }
 
