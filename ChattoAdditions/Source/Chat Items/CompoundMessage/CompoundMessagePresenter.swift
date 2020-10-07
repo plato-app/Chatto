@@ -30,7 +30,8 @@ open class CompoundMessagePresenter<ViewModelBuilderT, InteractionHandlerT>
     ViewModelBuilderT: ViewModelBuilderProtocol,
     ViewModelBuilderT.ModelT: Equatable & ContentEquatableChatItemProtocol,
     InteractionHandlerT: BaseMessageInteractionHandlerProtocol,
-    InteractionHandlerT.ViewModelT == ViewModelBuilderT.ViewModelT {
+    InteractionHandlerT.MessageType == ViewModelBuilderT.ModelT,
+    InteractionHandlerT.ViewModelType == ViewModelBuilderT.ViewModelT {
 
     public typealias ModelT = ViewModelBuilderT.ModelT
     public typealias ViewModelT = ViewModelBuilderT.ViewModelT
@@ -114,7 +115,10 @@ open class CompoundMessagePresenter<ViewModelBuilderT, InteractionHandlerT>
     }
 
     open func updateContent() {
-        self.contentFactories = self.initialContentFactories.filter { $0.canCreateMessageContent(forModel: self.messageModel) }
+        let previousIds = self.contentFactories?.map { $0.identifier }
+        let contentFactories = self.initialContentFactories.filter { $0.canCreateMessageContent(forModel: self.messageModel) }
+        let currentIds = contentFactories.map { $0.identifier }
+        self.contentFactories = contentFactories
 
         self.contentPresenters = self.contentFactories.compactMap {
             var presenter = $0.createContentPresenter(forModel: self.messageModel)
@@ -125,6 +129,10 @@ open class CompoundMessagePresenter<ViewModelBuilderT, InteractionHandlerT>
         self.menuPresenter = self.contentFactories.lazy.compactMap { $0.createMenuPresenter(forModel: self.messageModel) }.first
 
         self.decorationFactories = self.initialDecorationFactories.filter { $0.canCreateDecorationView(for: self.messageModel) }
+
+        if let previousIds = previousIds, previousIds != currentIds, let bubbleView = self.cell?.bubbleView {
+            self.updateContentViews(in: bubbleView)
+        }
     }
 
     open func updateExistingContentPresenters(with newMessage: Any) {
@@ -163,9 +171,7 @@ open class CompoundMessagePresenter<ViewModelBuilderT, InteractionHandlerT>
 
             if bubbleView.decoratedContentViews == nil {
                 bubbleView.accessibilityIdentifier = self.accessibilityIdentifier
-                bubbleView.decoratedContentViews = zip(self.contentFactories, self.contentPresenters).map { factory, presenter in
-                    return CompoundBubbleView.DecoratedView(view: factory.createContentView(), showBorder: presenter.showBorder)
-                }
+                self.updateContentViews(in: bubbleView)
             }
 
             bubbleView.viewModel = self.messageViewModel
@@ -189,7 +195,7 @@ open class CompoundMessagePresenter<ViewModelBuilderT, InteractionHandlerT>
             compoundCell.decorationViews = self.decorationFactories.map { factory in
                 let view = factory.makeDecorationView(for: self.messageModel)
                 let layoutProvider = factory.makeLayoutProvider(for: self.messageModel)
-                return (view,layoutProvider)
+                return (view, layoutProvider)
             }
         }
     }
@@ -218,10 +224,12 @@ open class CompoundMessagePresenter<ViewModelBuilderT, InteractionHandlerT>
     private var layoutProvider: CompoundBubbleLayoutProvider {
         let configuration: CompoundBubbleLayoutProvider.Configuration = {
             let contentLayoutProviders = self.contentFactories.map { $0.createLayoutProvider(forModel: self.messageModel) }
+            let decorationLayoutProviders = self.decorationFactories.map { $0.makeLayoutProvider(for: self.messageModel) }
             let viewModel = self.messageViewModel
             let tailWidth = self.compoundCellStyle.tailWidth(forViewModel: viewModel)
             return CompoundBubbleLayoutProvider.Configuration(
                 layoutProviders: contentLayoutProviders,
+                decorationLayoutProviders: decorationLayoutProviders,
                 tailWidth: tailWidth,
                 isIncoming: viewModel.isIncoming
             )
@@ -256,14 +264,38 @@ open class CompoundMessagePresenter<ViewModelBuilderT, InteractionHandlerT>
         self.menuPresenter?.performMenuControllerAction(action)
     }
 
+    // MARK: - ChatItemSpotlighting
+
+    override open func spotlight() {
+        self.cell?.bubbleView?.spotlight()
+    }
+
     // MARK: - MessageContentPresenterDelegate
 
     public func presenterDidInvalidateLayout(_ presenter: MessageContentPresenterProtocol) {
         self.cleanLayoutCache(for: self.lastUsedConfiguration)
     }
 
+    // MARK: - Private
+
     private func cleanLayoutCache(for configuration: CompoundBubbleLayoutProvider.Configuration?) {
         guard let configuration = configuration else { return }
         self.cache[configuration] = nil
+    }
+
+    private func updateContentViews(in bubbleView: CompoundBubbleView) {
+        let action = { [weak self] in
+            guard let self = self else { return }
+            bubbleView.decoratedContentViews = zip(self.contentFactories, self.contentPresenters).map { factory, presenter in
+                CompoundBubbleView.DecoratedView(view: factory.createContentView(), showBorder: presenter.showBorder)
+            }
+        }
+        if Thread.isMainThread {
+            action()
+        } else {
+            DispatchQueue.main.async {
+                action()
+            }
+        }
     }
 }
