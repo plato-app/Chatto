@@ -1,3 +1,60 @@
+### 4.0.0 (September 20, 2020)
+
+#### Features
+
+- Swipe to reply #672 by [@wiruzx](https://github.com/wiruzx)
+- Ability to highlight message when scrolling to it #670 by [@wiruzx](https://github.com/wiruzx)
+- Add ability to show decoration views on compound bubble #657 by [@wiruzx](https://github.com/wiruzx)
+
+#### Improvements
+
+- Update of compound views #666 by [@wiruzx](https://github.com/wiruzx)
+- BaseMessageInteractionHandlerProtocol methods are extended with a message parameter #665 by [@magic146](https://github.com/magic146)
+- Fix project warnings, migrate to Xcode 11 #662 by [@petrpavlik](https://github.com/petrpavlik)
+- Add safe area insets for decoration views #660 by [@wiruzx](https://github.com/wiruzx)
+- Bump xcode version in travis config #661 by [@wiruzx](https://github.com/wiruzx)
+- Compound bubble styling simplification #653 by [@magic146](https://github.com/magic146)
+- Add removing random item to demo project #652 by [@wiruzx](https://github.com/wiruzx)
+- Fix autolayout support for BaseMessageCollrctionViewCell #651 by [@wiruzx](https://github.com/wiruzx)
+- Determine UI orientation without shared UIApplication object #637 by [@FabioTacke](https://github.com/FabioTacke)
+- Safe area support for BaseChatViewController #632 by [@esilverberg](https://github.com/esilverberg)
+
+#### Bugfixes
+
+- iOS 14: Fix infinite layout loop when chat is empty #674 by [@nalexn](https://github.com/nalexn)
+- Fix image stretching #673 by [@wiruzx](https://github.com/wiruzx)
+- Do not restart camera capture when camera picker is presented #671 by [@leonspok](https://github.com/leonspok)
+- Set frame with disabled animation #659 by [@wiruzx](https://github.com/wiruzx)
+- Fix typo in CGSize extension #655 by [@95krasovsky](https://github.com/95krasovsky)
+- Fix crash, if BaseChatViewController destroyed too early #549 by [@freedbrt](https://github.com/freedbrt)
+- Fix masking in iOS 14 #667 by [@esilverberg](https://github.com/esilverberg)
+
+### 3.6.0 (April 24, 2020)
+
+#### Features
+
+- Multiline placeholder support #640 by [@Ssimboss](https://github.com/Ssimboss)
+
+#### Improvements
+
+- Add explicit dependency on Chatto #646 by [@wiruzx](https://github.com/wiruzx)
+- Allow to specify orientation in default keyboard height #630 by [@leonspok](https://github.com/leonspok)
+- Improve scroll performance #629 by [@AntonPalich](https://github.com/AntonPalich)
+- Disable BUILD_LIBRARY_FOR_DISTRIBUTION option #626 by [@dive](https://github.com/dive)
+- Enable module stability support #625 by [@dive](https://github.com/dive)
+- Open avatar for customization #624 by [@wiruzx](https://github.com/wiruzx)
+- Fix product name #622 by [@wiruzx](https://github.com/wiruzx)
+- Fix imports #612 by [@wiruzx](https://github.com/wiruzx)
+
+#### Bugfixes
+
+- Fix crash on termination #648 by [@dive](https://github.com/dive)
+- Made overridden inputAccessoryView read-write #644 by [@azatZul](https://github.com/azatZul)
+- Fix jumping with long text in text input #642 by [@leonspok](https://github.com/leonspok)
+- Fix wrong scroll indicator insets on iOS 13 #627 by [@AntonPalich](https://github.com/AntonPalich)
+- Fix scrolled position after frame change #623 by [@leonspok](https://github.com/leonspok)
+- Fix input bar position #620 by [@magic146](https://github.com/magic146)
+
 ### 3.5.0 (September 12, 2019)
 
 #### Features
