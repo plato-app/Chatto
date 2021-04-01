@@ -179,7 +179,7 @@ extension BaseChatViewController {
 
         let scrollAction: ScrollAction
         do { // Scroll action
-            if updateType != .pagination && self.isScrolledAtBottom() {
+            if updateType != .pagination && self.isScrolledAtBottom() && self.shouldAutoScrollOnBatchUpdate() {
                 scrollAction = .scrollToBottom
             } else {
                 let (oldReferenceIndexPath, newReferenceIndexPath) = self.referenceIndexPathsToRestoreScrollPositionOnUpdate(itemsBeforeUpdate: self.chatItemCompanionCollection, changes: changes)
@@ -368,4 +368,7 @@ extension BaseChatViewController {
         return self.layoutModel
     }
 
+    func shouldAutoScrollOnBatchUpdate() -> Bool {
+        return true
+    }
 }
