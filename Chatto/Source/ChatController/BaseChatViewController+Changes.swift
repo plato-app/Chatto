@@ -368,7 +368,8 @@ extension BaseChatViewController {
         return self.layoutModel
     }
 
-    func shouldAutoScrollOnBatchUpdate() -> Bool {
+    @objc
+    open func shouldAutoScrollOnBatchUpdate() -> Bool {
         return true
     }
 }
