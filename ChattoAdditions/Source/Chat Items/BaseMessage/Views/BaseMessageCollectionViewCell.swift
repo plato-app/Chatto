@@ -312,6 +312,8 @@ open class BaseMessageCollectionViewCell<BubbleViewType>: UICollectionViewCell, 
                     let constraint = NSLayoutConstraint(item: sView, attribute: .right, relatedBy: .equal, toItem: senderIdViewContainer, attribute: .right, multiplier: 1, constant: 0)
                     senderIdViewContainer.addConstraint(constraint)
                 }
+                let constraint = NSLayoutConstraint(item: sView, attribute: .centerY, relatedBy: .equal, toItem: senderIdViewContainer, attribute: .centerY, multiplier: 1, constant: 0)
+                senderIdViewContainer.addConstraint(constraint)
             }
         }
     }
@@ -670,8 +672,8 @@ private struct Layout {
         }
 
         if showSenderId {
+            // shift bubble view down a little bit since there will be showing senderID part
             self.bubbleViewFrame.origin.y = extraHeight
-            self.avatarViewFrame.origin.y = extraHeight
         }
 
         self.size = containerRect.size
