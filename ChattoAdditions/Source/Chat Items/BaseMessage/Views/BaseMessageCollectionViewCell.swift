@@ -164,7 +164,7 @@ open class BaseMessageCollectionViewCell<BubbleViewType>: UICollectionViewCell, 
     }
 
     public private(set) var senderIdViewContainer = UIView()
-    private var senderIdView: UIView?
+    public private(set) var senderIdView: UIView?
 
     public override init(frame: CGRect) {
         super.init(frame: frame)
