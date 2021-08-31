@@ -190,6 +190,18 @@ open class BaseMessageCollectionViewCellDefaultStyle: BaseMessageCollectionViewC
     private func avatarStyle(for viewModel: MessageViewModelProtocol) -> AvatarStyle {
         return viewModel.isIncoming ? self.incomingAvatarStyle : self.outgoingAvatarStyle
     }
+
+    open func senderIdView(viewModel: MessageViewModelProtocol) -> UIView {
+        return UILabel()
+    }
+
+    open func senderIdHeight(viewModel: MessageViewModelProtocol) -> CGFloat {
+        return 18
+    }
+
+    open func senderIdHorizontalOffset(viewModel: MessageViewModelProtocol) -> CGFloat {
+        return 52
+    }
 }
 
 public extension BaseMessageCollectionViewCellDefaultStyle { // Default values

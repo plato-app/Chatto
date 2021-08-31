@@ -48,7 +48,15 @@ public protocol BaseMessageCollectionViewCellStyleProtocol {
     func selectionIndicatorIcon(for viewModel: MessageViewModelProtocol) -> UIImage
     func attributedStringForDate(_ date: String) -> NSAttributedString
     func layoutConstants(viewModel: MessageViewModelProtocol) -> BaseMessageCollectionViewCellLayoutConstants
+    func senderIdView(viewModel: MessageViewModelProtocol) -> UIView
+    func senderIdHeight(viewModel: MessageViewModelProtocol) -> CGFloat
+    func senderIdHorizontalOffset(viewModel: MessageViewModelProtocol) -> CGFloat
     var replyIndicatorStyle: ReplyIndicatorStyle? { get }
+}
+
+open class AvatarView: UIView {
+    open func setAvatarImage(image: UIImage?) { }
+    open func setAvatarSize(_ size: CGSize) { }
 }
 
 public struct BaseMessageCollectionViewCellLayoutConstants {
@@ -148,12 +156,15 @@ open class BaseMessageCollectionViewCell<BubbleViewType>: UICollectionViewCell, 
         return nil
     }
 
-    public private(set) var avatarView: UIImageView!
-    open func createAvatarView() -> UIImageView! {
-        let avatarImageView = UIImageView(frame: CGRect.zero)
-        avatarImageView.isUserInteractionEnabled = true
-        return avatarImageView
-    }
+    public private(set) var avatarView: AvatarView!
+        open func createAvatarView() -> AvatarView! {
+            let avatarView = AvatarView(frame: CGRect.zero)
+            avatarView.isUserInteractionEnabled = true
+            return avatarView
+        }
+
+        public private(set) var senderIdViewContainer = UIView()
+        public private(set) var senderIdView: UIView?
 
     public override init(frame: CGRect) {
         super.init(frame: frame)
@@ -205,6 +216,7 @@ open class BaseMessageCollectionViewCell<BubbleViewType>: UICollectionViewCell, 
         self.contentView.addSubview(self.bubbleView)
         self.contentView.addSubview(self.failedButton)
         self.contentView.addSubview(self.selectionIndicator)
+        self.contentView.addSubview(self.senderIdViewContainer)
         self.contentView.addSubview(self.replyIndicator)
         self.replyIndicator.alpha = 0
         self.contentView.isExclusiveTouch = true
@@ -243,6 +255,8 @@ open class BaseMessageCollectionViewCell<BubbleViewType>: UICollectionViewCell, 
     open override func prepareForReuse() {
         super.prepareForReuse()
         self.removeAccessoryView()
+        self.senderIdView?.removeFromSuperview()
+        self.senderIdView = nil
     }
 
     public private(set) lazy var failedButton: UIButton = {
@@ -260,6 +274,7 @@ open class BaseMessageCollectionViewCell<BubbleViewType>: UICollectionViewCell, 
         self.bubbleView.isUserInteractionEnabled = viewModel.isUserInteractionEnabled
         self.updateFailedIconState()
         self.accessoryTimestampView.attributedText = style.attributedStringForDate(viewModel.date)
+        self.updateSenderIdView(from: viewModel, with: style)
         self.updateSelectionIndicator(with: style)
 
         self.contentView.isUserInteractionEnabled = !viewModel.decorationAttributes.isShowingSelectionIndicator
@@ -294,12 +309,33 @@ open class BaseMessageCollectionViewCell<BubbleViewType>: UICollectionViewCell, 
         guard self.viewContext != .sizing else { return }
         guard let viewModel = self.messageViewModel else { return }
         self.avatarView.isHidden = !viewModel.decorationAttributes.isShowingAvatar
-        self.avatarView.image = viewModel.avatarImage.value
+        self.avatarView.setAvatarImage(image: viewModel.avatarImage.value)
         viewModel.avatarImage.observe(self) { [weak self] _, new in
             guard let self = self else { return }
-            self.avatarView.image = new
+            self.avatarView.setAvatarImage(image: new)
         }
     }
+
+    private func updateSenderIdView(from viewModel: MessageViewModelProtocol,
+                                      with style: BaseMessageCollectionViewCellStyleProtocol) {
+            self.senderIdViewContainer.isHidden = !viewModel.decorationAttributes.isShowingSenderId
+            if self.senderIdView == nil {
+                self.senderIdView = style.senderIdView(viewModel: viewModel)
+                if let sView = self.senderIdView {
+                    // for sure it is not null
+                    senderIdViewContainer.addSubview(sView)
+                    if viewModel.isIncoming {
+                        let constraint = NSLayoutConstraint(item: sView, attribute: .left, relatedBy: .equal, toItem: senderIdViewContainer, attribute: .left, multiplier: 1, constant: 0)
+                        senderIdViewContainer.addConstraint(constraint)
+                    } else {
+                        let constraint = NSLayoutConstraint(item: sView, attribute: .right, relatedBy: .equal, toItem: senderIdViewContainer, attribute: .right, multiplier: 1, constant: 0)
+                        senderIdViewContainer.addConstraint(constraint)
+                    }
+                    let constraint = NSLayoutConstraint(item: sView, attribute: .centerY, relatedBy: .equal, toItem: senderIdViewContainer, attribute: .centerY, multiplier: 1, constant: 0)
+                    senderIdViewContainer.addConstraint(constraint)
+                }
+            }
+        }
 
     // MARK: layout
 
@@ -339,6 +375,8 @@ open class BaseMessageCollectionViewCell<BubbleViewType>: UICollectionViewCell, 
 
         self.avatarView.bma_rect = layout.avatarViewFrame
         self.selectionIndicator.bma_rect = layout.selectionIndicatorFrame
+
+        self.senderIdViewContainer.frame = layout.senderIdViewFrame
 
         if self.accessoryTimestampView.superview != nil {
             let layoutConstants = baseStyle.layoutConstants(viewModel: messageViewModel)
@@ -392,7 +430,10 @@ open class BaseMessageCollectionViewCell<BubbleViewType>: UICollectionViewCell, 
             avatarVerticalAlignment: self.baseStyle.avatarVerticalAlignment(viewModel: self.messageViewModel),
             isShowingSelectionIndicator: self.messageViewModel.decorationAttributes.isShowingSelectionIndicator,
             selectionIndicatorSize: self.baseStyle.selectionIndicatorIcon(for: self.messageViewModel).size,
-            selectionIndicatorMargins: self.baseStyle.selectionIndicatorMargins
+            selectionIndicatorMargins: self.baseStyle.selectionIndicatorMargins,
+            showSenderId: self.messageViewModel.decorationAttributes.isShowingAvatar,
+            senderIdViewHeight: self.baseStyle.senderIdHeight(viewModel: self.messageViewModel),
+            senderIdHorizontalOffset: self.baseStyle.senderIdHorizontalOffset(viewModel: self.messageViewModel)
         )
         var layoutModel = Layout()
         layoutModel.calculateLayout(parameters: parameters)
@@ -552,6 +593,7 @@ private struct Layout {
     private (set) var failedButtonFrame = CGRect.zero
     private (set) var bubbleViewFrame = CGRect.zero
     private (set) var avatarViewFrame = CGRect.zero
+    private (set) var senderIdViewFrame = CGRect.zero
     private (set) var selectionIndicatorFrame = CGRect.zero
     private (set) var preferredMaxWidthForBubble: CGFloat = 0
 
@@ -565,10 +607,13 @@ private struct Layout {
         let horizontalInterspacing = parameters.horizontalInterspacing
         let avatarSize = parameters.avatarSize
         let selectionIndicatorSize = parameters.selectionIndicatorSize
+        let showSenderId = parameters.showSenderId
+        let senderIdViewHeight = parameters.senderIdViewHeight
 
         let preferredWidthForBubble = (containerWidth * parameters.maxContainerWidthPercentageForBubbleView).bma_round()
         let bubbleSize = bubbleView.sizeThatFits(CGSize(width: preferredWidthForBubble, height: .greatestFiniteMagnitude))
-        let containerRect = CGRect(origin: CGPoint.zero, size: CGSize(width: containerWidth, height: bubbleSize.height))
+        let extraHeight: CGFloat = showSenderId ? senderIdViewHeight + 2 : 0
+        let containerRect = CGRect(origin: CGPoint.zero, size: CGSize(width: containerWidth, height: bubbleSize.height + extraHeight))
 
         self.bubbleViewFrame = bubbleSize.bma_rect(
             inContainer: containerRect,
@@ -592,6 +637,14 @@ private struct Layout {
             inContainer: containerRect,
             xAlignament: .left,
             yAlignment: .center
+        )
+
+        let senderIdViewSize = CGSize(width: containerRect.width - parameters.senderIdHorizontalOffset, height: senderIdViewHeight)
+        let xAlignment = isIncoming ? HorizontalAlignment.left : HorizontalAlignment.right
+        self.senderIdViewFrame = senderIdViewSize.bma_rect(
+            inContainer: containerRect,
+            xAlignament: xAlignment,
+            yAlignment: .top
         )
 
         // Adjust horizontal positions
@@ -620,6 +673,9 @@ private struct Layout {
                 currentX += horizontalInterspacing
             }
             self.bubbleViewFrame.origin.x = currentX
+            if showSenderId {
+                self.senderIdViewFrame.origin.x = parameters.senderIdHorizontalOffset
+            }
         } else {
             currentX = containerRect.maxX - horizontalMargin
             currentX -= avatarSize.width
@@ -635,6 +691,14 @@ private struct Layout {
             }
             currentX -= bubbleSize.width
             self.bubbleViewFrame.origin.x = currentX
+            if showSenderId {
+                self.senderIdViewFrame.origin.x = 0
+            }
+        }
+
+        if showSenderId {
+            // shift bubble view down a little bit since there will be showing senderID part
+            self.bubbleViewFrame.origin.y = extraHeight
         }
 
         self.size = containerRect.size
@@ -656,4 +720,7 @@ private struct LayoutParameters {
     let isShowingSelectionIndicator: Bool
     let selectionIndicatorSize: CGSize
     let selectionIndicatorMargins: UIEdgeInsets
+    let showSenderId: Bool
+    let senderIdViewHeight: CGFloat
+    let senderIdHorizontalOffset: CGFloat
 }
