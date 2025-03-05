@@ -223,21 +223,9 @@ open class BaseChatViewController: UIViewController,
         self.inputBarContainer.backgroundColor = .white
         self.view.addSubview(self.inputBarContainer)
         self.view.addConstraint(NSLayoutConstraint(item: self.inputBarContainer, attribute: .top, relatedBy: .greaterThanOrEqual, toItem: self.topLayoutGuide, attribute: .bottom, multiplier: 1, constant: 0))
-        let leadingAnchor: NSLayoutXAxisAnchor
-        let trailingAnchor: NSLayoutXAxisAnchor
-        if #available(iOS 11.0, *) {
-            let guide = self.view.safeAreaLayoutGuide
-            leadingAnchor = guide.leadingAnchor
-            trailingAnchor = guide.trailingAnchor
-        } else {
-            leadingAnchor = self.view.leadingAnchor
-            trailingAnchor = self.view.trailingAnchor
-        }
+        view.addConstraint(NSLayoutConstraint(item: inputBarContainer, attribute: .leading, relatedBy: .equal, toItem: collectionView, attribute: .leading, multiplier: 1, constant: 0))
+        view.addConstraint(NSLayoutConstraint(item: inputBarContainer, attribute: .trailing, relatedBy: .equal, toItem: collectionView, attribute: .trailing, multiplier: 1, constant: 0))
 
-        NSLayoutConstraint.activate([
-            self.inputBarContainer.leadingAnchor.constraint(equalTo: leadingAnchor),
-            self.inputBarContainer.trailingAnchor.constraint(equalTo: trailingAnchor),
-        ])
         self.inputContainerBottomConstraint = NSLayoutConstraint(item: self.view, attribute: .bottom, relatedBy: .equal, toItem: self.inputBarContainer, attribute: .bottom, multiplier: 1, constant: 0)
         self.view.addConstraint(self.inputContainerBottomConstraint)
     }
