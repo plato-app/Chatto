@@ -270,6 +270,10 @@ private class KeyboardTrackingView: UIView {
             let oldCenter = (sChange[NSKeyValueChangeKey.oldKey] as! NSValue).cgPointValue
             let newCenter = (sChange[NSKeyValueChangeKey.newKey] as! NSValue).cgPointValue
             if oldCenter != newCenter {
+                // On iOS 26, during a user swipe to close the screen and cancel this swipe, the system sends a notification to `UIKeyboardItemContainerView`, during which the `KeyboardTrackingView` has a negative `Y`, which leads to incorrect calculation of the bottom margin. On iOS 18 and older, this method is not called at all in this case.
+                if #available(iOS 26.0, *), self.frame.minY < 0 {
+                    return
+                }
                 self.positionChangedCallback?()
             }
         }
