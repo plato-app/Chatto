@@ -42,12 +42,7 @@ extension BaseChatViewController {
     }
 
     public func isScrolledAtBottom() -> Bool {
-        guard let collectionView = self.collectionView else { return true }
-        guard collectionView.numberOfSections > 0 && collectionView.numberOfItems(inSection: 0) > 0 else { return true }
-        let sectionIndex = collectionView.numberOfSections - 1
-        let itemIndex = collectionView.numberOfItems(inSection: sectionIndex) - 1
-        let lastIndexPath = IndexPath(item: itemIndex, section: sectionIndex)
-        return self.isIndexPathVisible(lastIndexPath, atEdge: .bottom)
+        isCloseToBottom(withThreshold: 0.001)
     }
 
     public func isScrolledAtTop() -> Bool {
@@ -58,9 +53,7 @@ extension BaseChatViewController {
     }
 
     public func isCloseToBottom() -> Bool {
-        guard let collectionView = self.collectionView else { return true }
-        guard collectionView.contentSize.height > 0 else { return true }
-        return (self.visibleRect().maxY / collectionView.contentSize.height) > (1 - self.constants.autoloadingFractionalThreshold)
+        isCloseToBottom(withThreshold: constants.autoloadingFractionalThreshold)
     }
 
     public func isCloseToTop() -> Bool {
@@ -198,5 +191,23 @@ extension BaseChatViewController {
         } else if self.isCloseToBottom() && dataSource.hasMoreNext {
             dataSource.loadNext()
         }
+    }
+
+    private func isCloseToBottom(withThreshold threshold: CGFloat) -> Bool {
+        guard
+            let collectionView,
+            collectionView.contentSize.height > 0
+        else {
+            return true
+        }
+        let contentHeight = collectionView.contentSize.height
+        let scrollViewHeight = collectionView.bounds.height
+        let contentOffsetY = collectionView.contentOffset.y
+        let bottomInset = collectionView.contentInset.bottom
+
+        let maxVisibleY = contentOffsetY + scrollViewHeight - bottomInset
+        let distanceFromBottom = contentHeight - maxVisibleY
+        let thresholdValue = scrollViewHeight * threshold
+        return distanceFromBottom <= thresholdValue
     }
 }
