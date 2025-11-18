@@ -42,7 +42,7 @@ extension BaseChatViewController {
     }
 
     public func isScrolledAtBottom() -> Bool {
-        isCloseToBottom(withThreshold: 0.001)
+        isCloseToBottom(withHeightThreshold: 0.001)
     }
 
     public func isScrolledAtTop() -> Bool {
@@ -53,7 +53,7 @@ extension BaseChatViewController {
     }
 
     public func isCloseToBottom() -> Bool {
-        isCloseToBottom(withThreshold: constants.autoloadingFractionalThreshold)
+        isCloseToBottom(withHeightThreshold: constants.autoloadingFractionalThreshold)
     }
 
     public func isCloseToTop() -> Bool {
@@ -193,7 +193,7 @@ extension BaseChatViewController {
         }
     }
 
-    private func isCloseToBottom(withThreshold threshold: CGFloat) -> Bool {
+    public func isCloseToBottom(withHeightThreshold threshold: CGFloat) -> Bool {
         guard
             let collectionView,
             collectionView.contentSize.height > 0
