@@ -194,20 +194,14 @@ extension BaseChatViewController {
     }
 
     public func isCloseToBottom(withHeightThreshold threshold: CGFloat) -> Bool {
-        guard
-            let collectionView,
-            collectionView.contentSize.height > 0
-        else {
+        guard let collectionView else {
             return true
         }
-        let contentHeight = collectionView.contentSize.height
-        let scrollViewHeight = collectionView.bounds.height
-        let contentOffsetY = collectionView.contentOffset.y
-        let bottomInset = collectionView.contentInset.bottom
+        let contentHeight = collectionView.collectionViewLayout.collectionViewContentSize.height
+        let visibleRect = visibleRect()
 
-        let maxVisibleY = contentOffsetY + scrollViewHeight - bottomInset
-        let distanceFromBottom = contentHeight - maxVisibleY
-        let thresholdValue = scrollViewHeight * threshold
+        let distanceFromBottom = contentHeight - visibleRect.maxY
+        let thresholdValue = visibleRect.height * threshold
         return distanceFromBottom <= thresholdValue
     }
 }
