@@ -42,12 +42,7 @@ extension BaseChatViewController {
     }
 
     public func isScrolledAtBottom() -> Bool {
-        guard let collectionView = self.collectionView else { return true }
-        guard collectionView.numberOfSections > 0 && collectionView.numberOfItems(inSection: 0) > 0 else { return true }
-        let sectionIndex = collectionView.numberOfSections - 1
-        let itemIndex = collectionView.numberOfItems(inSection: sectionIndex) - 1
-        let lastIndexPath = IndexPath(item: itemIndex, section: sectionIndex)
-        return self.isIndexPathVisible(lastIndexPath, atEdge: .bottom)
+        isCloseToBottom(withHeightThreshold: 0.001)
     }
 
     public func isScrolledAtTop() -> Bool {
@@ -58,9 +53,7 @@ extension BaseChatViewController {
     }
 
     public func isCloseToBottom() -> Bool {
-        guard let collectionView = self.collectionView else { return true }
-        guard collectionView.contentSize.height > 0 else { return true }
-        return (self.visibleRect().maxY / collectionView.contentSize.height) > (1 - self.constants.autoloadingFractionalThreshold)
+        isCloseToBottom(withHeightThreshold: constants.autoloadingFractionalThreshold)
     }
 
     public func isCloseToTop() -> Bool {
@@ -198,5 +191,17 @@ extension BaseChatViewController {
         } else if self.isCloseToBottom() && dataSource.hasMoreNext {
             dataSource.loadNext()
         }
+    }
+
+    public func isCloseToBottom(withHeightThreshold threshold: CGFloat) -> Bool {
+        guard let collectionView else {
+            return true
+        }
+        let contentHeight = collectionView.collectionViewLayout.collectionViewContentSize.height
+        let visibleRect = visibleRect()
+
+        let distanceFromBottom = contentHeight - visibleRect.maxY
+        let thresholdValue = visibleRect.height * threshold
+        return distanceFromBottom <= thresholdValue
     }
 }
