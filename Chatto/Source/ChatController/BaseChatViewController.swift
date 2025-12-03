@@ -326,6 +326,7 @@ open class BaseChatViewController: UIViewController,
         self.keyboardTracker?.adjustTrackingViewSizeIfNeeded()
 
         if self.isFirstLayout {
+            self.keyboardTracker?.adjustTrackingViewSize()
             self.updateQueue.start()
             self.isFirstLayout = false
         }
