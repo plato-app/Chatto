@@ -199,7 +199,10 @@ extension BaseChatViewController {
         }
         let contentHeight = collectionView.collectionViewLayout.collectionViewContentSize.height
         let visibleRect = visibleRect()
-
+        // Due to floating-point precision issues near zero, subsequent calculations may produce incorrect results.
+        guard contentHeight > 0 else {
+            return true
+        }
         let distanceFromBottom = contentHeight - visibleRect.maxY
         let thresholdValue = visibleRect.height * threshold
         return distanceFromBottom <= thresholdValue
