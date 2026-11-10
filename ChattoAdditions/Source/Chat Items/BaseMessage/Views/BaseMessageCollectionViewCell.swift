@@ -182,7 +182,7 @@ open class BaseMessageCollectionViewCell<BubbleViewType>: UICollectionViewCell, 
         return tapGestureRecognizer
     }()
 
-    public private (set) lazy var longPressGestureRecognizer: UILongPressGestureRecognizer = {
+    public private(set) lazy var longPressGestureRecognizer: UILongPressGestureRecognizer = {
         let longpressGestureRecognizer = UILongPressGestureRecognizer(target: self, action: #selector(BaseMessageCollectionViewCell.bubbleLongPressed(_:)))
         longpressGestureRecognizer.cancelsTouchesInView = true
         longpressGestureRecognizer.delegate = self
@@ -564,13 +564,13 @@ open class BaseMessageCollectionViewCell<BubbleViewType>: UICollectionViewCell, 
 }
 
 private struct Layout {
-    private (set) var size = CGSize.zero
-    private (set) var failedButtonFrame = CGRect.zero
-    private (set) var bubbleViewFrame = CGRect.zero
-    private (set) var avatarViewFrame = CGRect.zero
-    private (set) var senderIdViewFrame = CGRect.zero
-    private (set) var selectionIndicatorFrame = CGRect.zero
-    private (set) var preferredMaxWidthForBubble: CGFloat = 0
+    private(set) var size = CGSize.zero
+    private(set) var failedButtonFrame = CGRect.zero
+    private(set) var bubbleViewFrame = CGRect.zero
+    private(set) var avatarViewFrame = CGRect.zero
+    private(set) var senderIdViewFrame = CGRect.zero
+    private(set) var selectionIndicatorFrame = CGRect.zero
+    private(set) var preferredMaxWidthForBubble: CGFloat = 0
 
     mutating func calculateLayout(parameters: LayoutParameters) {
         let containerWidth = parameters.containerWidth
