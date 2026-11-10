@@ -81,7 +81,7 @@ class LiveCameraCaptureSession: LiveCameraCaptureSessionProtocol {
         self.queue.addOperation(operation)
     }
 
-    private (set) var captureLayer: AVCaptureVideoPreviewLayer?
+    private(set) var captureLayer: AVCaptureVideoPreviewLayer?
 
     private lazy var queue: OperationQueue = {
         let queue = OperationQueue()
