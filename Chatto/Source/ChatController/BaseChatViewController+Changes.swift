@@ -252,38 +252,20 @@ extension BaseChatViewController {
         }
         let collectionViewWidth = collectionView.bounds.width
         let updateType = self.isFirstLayout ? .firstLoad : updateType
-        let performInBackground = updateType != .firstLoad
 
         self.autoLoadingEnabled = false
-        let perfomBatchUpdates: (_ changes: CollectionChanges, _ updateModelClosure: @escaping () -> Void) -> Void  = { [weak self] (changes, updateModelClosure) in
-            self?.performBatchUpdates(
-                updateModelClosure: updateModelClosure,
-                changes: changes,
-                updateType: updateType,
-                completion: { () -> Void in
-                    self?.autoLoadingEnabled = true
-                    completion()
+        let modelUpdate = self.createModelUpdates(
+            newItems: newItems,
+            oldItems: oldItems,
+            collectionViewWidth: collectionViewWidth)
+        self.performBatchUpdates(
+            updateModelClosure: modelUpdate.updateModelClosure,
+            changes: modelUpdate.changes,
+            updateType: updateType,
+            completion: { [weak self] in
+                self?.autoLoadingEnabled = true
+                completion()
             })
-        }
-
-        let createModelUpdate = {
-            return self.createModelUpdates(
-                newItems: newItems,
-                oldItems: oldItems,
-                collectionViewWidth: collectionViewWidth)
-        }
-
-        if performInBackground {
-            DispatchQueue.global(qos: .userInitiated).async { () -> Void in
-                let modelUpdate = createModelUpdate()
-                DispatchQueue.main.async(execute: { () -> Void in
-                    perfomBatchUpdates(modelUpdate.changes, modelUpdate.updateModelClosure)
-                })
-            }
-        } else {
-            let modelUpdate = createModelUpdate()
-            perfomBatchUpdates(modelUpdate.changes, modelUpdate.updateModelClosure)
-        }
     }
 
     private func createModelUpdates(newItems: [ChatItemProtocol], oldItems: ChatItemCompanionCollection, collectionViewWidth: CGFloat) -> (changes: CollectionChanges, updateModelClosure: () -> Void) {
@@ -324,40 +306,13 @@ extension BaseChatViewController {
     }
 
     private func createLayoutModel(_ items: ChatItemCompanionCollection, collectionViewWidth: CGFloat) -> ChatCollectionViewLayoutModel {
-        typealias IntermediateItemLayoutData = (height: CGFloat?, bottomMargin: CGFloat)
         typealias ItemLayoutData = (height: CGFloat, bottomMargin: CGFloat)
 
-        func createLayoutModel(intermediateLayoutData: [IntermediateItemLayoutData]) -> ChatCollectionViewLayoutModel {
-            let layoutData = intermediateLayoutData.map { (intermediateLayoutData: IntermediateItemLayoutData) -> ItemLayoutData in
-                return (height: intermediateLayoutData.height!, bottomMargin: intermediateLayoutData.bottomMargin)
-            }
-            return ChatCollectionViewLayoutModel.createModel(collectionViewWidth, itemsLayoutData: layoutData)
+        let layoutData = items.map { itemCompanion -> ItemLayoutData in
+            let height = itemCompanion.presenter.heightForCell(maximumWidth: collectionViewWidth, decorationAttributes: itemCompanion.decorationAttributes)
+            return (height: height, bottomMargin: itemCompanion.decorationAttributes?.bottomMargin ?? 0)
         }
-
-        let isInbackground = !Thread.isMainThread
-        var intermediateLayoutData = [IntermediateItemLayoutData]()
-        var itemsForMainThread = [(index: Int, itemCompanion: ChatItemCompanion)]()
-
-        for (index, itemCompanion) in items.enumerated() {
-            var height: CGFloat?
-            let bottomMargin: CGFloat = itemCompanion.decorationAttributes?.bottomMargin ?? 0
-            if !isInbackground || itemCompanion.presenter.canCalculateHeightInBackground {
-                height = itemCompanion.presenter.heightForCell(maximumWidth: collectionViewWidth, decorationAttributes: itemCompanion.decorationAttributes)
-            } else {
-                itemsForMainThread.append((index: index, itemCompanion: itemCompanion))
-            }
-            intermediateLayoutData.append((height: height, bottomMargin: bottomMargin))
-        }
-
-        if itemsForMainThread.count > 0 {
-            DispatchQueue.main.sync(execute: { () -> Void in
-                for (index, itemCompanion) in itemsForMainThread {
-                    let height = itemCompanion.presenter.heightForCell(maximumWidth: collectionViewWidth, decorationAttributes: itemCompanion.decorationAttributes)
-                    intermediateLayoutData[index].height = height
-                }
-            })
-        }
-        return createLayoutModel(intermediateLayoutData: intermediateLayoutData)
+        return ChatCollectionViewLayoutModel.createModel(collectionViewWidth, itemsLayoutData: layoutData)
     }
 
     public func chatCollectionViewLayoutModel() -> ChatCollectionViewLayoutModel {

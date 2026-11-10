@@ -284,18 +284,8 @@ open class CompoundMessagePresenter<ViewModelBuilderT, InteractionHandlerT>
     }
 
     private func updateContentViews(in bubbleView: CompoundBubbleView) {
-        let action = { [weak self] in
-            guard let self = self else { return }
-            bubbleView.decoratedContentViews = zip(self.contentFactories, self.contentPresenters).map { factory, presenter in
-                CompoundBubbleView.DecoratedView(view: factory.createContentView(), showBorder: presenter.showBorder)
-            }
-        }
-        if Thread.isMainThread {
-            action()
-        } else {
-            DispatchQueue.main.async {
-                action()
-            }
+        bubbleView.decoratedContentViews = zip(self.contentFactories, self.contentPresenters).map { factory, presenter in
+            CompoundBubbleView.DecoratedView(view: factory.createContentView(), showBorder: presenter.showBorder)
         }
     }
 }

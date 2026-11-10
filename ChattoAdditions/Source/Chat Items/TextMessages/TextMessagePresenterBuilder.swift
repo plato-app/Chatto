@@ -48,18 +48,7 @@ open class TextMessagePresenterBuilder<ViewModelBuilderT, InteractionHandlerT>: 
     private let menuPresenter: TextMessageMenuItemPresenterProtocol?
     private let layoutCache = NSCache<AnyObject, AnyObject>()
 
-    private lazy var sizingCell: TextMessageCollectionViewCell = {
-        var cell: TextMessageCollectionViewCell?
-        if Thread.isMainThread {
-            cell = TextMessageCollectionViewCell.sizingCell()
-        } else {
-            DispatchQueue.main.sync(execute: {
-                cell =  TextMessageCollectionViewCell.sizingCell()
-            })
-        }
-
-        return cell!
-    }()
+    private lazy var sizingCell: TextMessageCollectionViewCell = TextMessageCollectionViewCell.sizingCell()
 
     public lazy var textCellStyle: TextMessageCollectionViewCellStyleProtocol = TextMessageCollectionViewCellDefaultStyle()
     public lazy var baseMessageStyle: BaseMessageCollectionViewCellStyleProtocol = BaseMessageCollectionViewCellDefaultStyle()
