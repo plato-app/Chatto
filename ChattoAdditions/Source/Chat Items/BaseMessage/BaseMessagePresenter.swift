@@ -32,6 +32,7 @@ public protocol ViewModelBuilderProtocol {
     func createViewModel(_ model: ModelT) -> ViewModelT
 }
 
+@MainActor
 public protocol BaseMessageInteractionHandlerProtocol {
 
     associatedtype MessageType
@@ -96,7 +97,9 @@ open class BaseMessagePresenter<BubbleViewT, ViewModelBuilderT, InteractionHandl
     public let interactionHandler: InteractionHandlerT?
     public let cellStyle: BaseMessageCollectionViewCellStyleProtocol
 
-    public private(set) final lazy var messageViewModel: ViewModelT = self.createViewModel()
+    public private(set) final lazy var messageViewModel: ViewModelT = { @MainActor in
+        self.createViewModel()
+    }()
 
     open func createViewModel() -> ViewModelT {
         let viewModel = self.viewModelBuilder.createViewModel(self.messageModel)

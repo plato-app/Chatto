@@ -8,6 +8,7 @@
 
 import XCTest
 
+@MainActor
 class CGRect_AdditionsTests: XCTestCase {
     func testThat_ItReturnsCorrectBoundsRect() {
         let rect = CGRect(x: 10, y: 10, width: 10, height: 10)

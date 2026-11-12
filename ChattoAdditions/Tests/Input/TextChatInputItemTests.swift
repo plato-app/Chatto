@@ -25,6 +25,7 @@
 import XCTest
 @testable import ChattoAdditions
 
+@MainActor
 class TextChatInputItemTests: XCTestCase {
     private var inputItem: TextChatInputItem!
     override func setUp() {

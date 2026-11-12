@@ -24,6 +24,7 @@
 
 import UIKit
 
+@MainActor
 public protocol ExpandableTextViewPlaceholderDelegate: class {
     func expandableTextViewDidShowPlaceholder(_ textView: ExpandableTextView)
     func expandableTextViewDidHidePlaceholder(_ textView: ExpandableTextView)

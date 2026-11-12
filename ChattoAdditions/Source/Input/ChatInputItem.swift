@@ -30,6 +30,7 @@ public enum ChatInputItemPresentationMode: UInt {
     case none
 }
 
+@MainActor
 public protocol ChatInputItemProtocol: AnyObject {
     var tabView: UIView { get }
     var inputView: UIView? { get }

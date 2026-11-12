@@ -24,6 +24,7 @@ THE SOFTWARE.
 
 import Foundation
 
+@MainActor
 public protocol ChatItemsDecoratorProtocol {
     func decorateItems(_ chatItems: [ChatItemProtocol]) -> [DecoratedChatItem]
 }

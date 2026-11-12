@@ -25,6 +25,7 @@
 import XCTest
 @testable import ChattoAdditions
 
+@MainActor
 class PhotoMessagePresenterTests: XCTestCase, UICollectionViewDataSource {
 
     var presenter: PhotoMessagePresenter<PhotoMessageViewModelDefaultBuilder<PhotoMessageModel<MessageModel>>, PhotoMessageTestHandler>!

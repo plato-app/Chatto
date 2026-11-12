@@ -24,6 +24,7 @@
 
 import UIKit
 
+@MainActor
 public protocol PhotoBubbleViewStyleProtocol {
     func maskingImage(viewModel: PhotoMessageViewModelProtocol) -> UIImage
     func borderImage(viewModel: PhotoMessageViewModelProtocol) -> UIImage?
@@ -220,6 +221,7 @@ private class PhotoBubbleLayoutModel {
     var visualCenter: CGPoint = .zero // Because image is cropped a few points on the side of the tail, the apparent center will be a bit shifted
     var size: CGSize = .zero
 
+    @MainActor
     struct LayoutContext {
         let photoSize: CGSize
         let placeholderSize: CGSize

@@ -25,6 +25,7 @@ THE SOFTWARE.
 import XCTest
 @testable import ChattoAdditions
 
+@MainActor
 class PhotosInputWithPlaceholderDataProviderTests: XCTestCase {
     var fakePhotosProvider: FakePhotosInputDataProvider!
     var fakePlaceholderProvider: FakePhotosInputDataProvider!

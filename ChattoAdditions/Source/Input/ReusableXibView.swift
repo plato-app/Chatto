@@ -34,6 +34,10 @@ import UIKit
     }
 
     override open func awakeAfter(using aDecoder: NSCoder) -> Any? {
+        MainActor.assumeIsolated { awakeAfterOnMain() }
+    }
+
+    private func awakeAfterOnMain() -> UIView? {
         if self.subviews.count > 0 {
             return self
         }

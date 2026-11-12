@@ -33,6 +33,7 @@ public enum KeyboardStatus {
 
 public typealias KeyboardHeightBlock = (_ height: CGFloat, _ status: KeyboardStatus) -> Void
 
+@MainActor
 class KeyboardTracker {
     private(set) var keyboardStatus: KeyboardStatus = .hidden
     private let view: UIView
@@ -268,11 +269,12 @@ private class KeyboardTrackingView: UIView {
                                of object: Any?,
                                change: [NSKeyValueChangeKey: Any]?,
                                context: UnsafeMutableRawPointer?) {
-        guard let object = object as? UIView, let superview = self.superview else { return }
-        if object === superview {
-            guard let sChange = change else { return }
-            let oldCenter = (sChange[NSKeyValueChangeKey.oldKey] as! NSValue).cgPointValue
-            let newCenter = (sChange[NSKeyValueChangeKey.newKey] as! NSValue).cgPointValue
+        guard let sChange = change else { return }
+        let oldCenter = (sChange[NSKeyValueChangeKey.oldKey] as! NSValue).cgPointValue
+        let newCenter = (sChange[NSKeyValueChangeKey.newKey] as! NSValue).cgPointValue
+        let objectID = (object as AnyObject?).map(ObjectIdentifier.init)
+        MainActor.assumeIsolated {
+            guard let superview = self.superview, objectID == ObjectIdentifier(superview) else { return }
             if oldCenter != newCenter {
                 // On iOS 26, during a user swipe to close the screen and cancel this swipe, the system sends a notification to `UIKeyboardItemContainerView`, during which the `KeyboardTrackingView` has a negative `Y`, which leads to incorrect calculation of the bottom margin. On iOS 18 and older, this method is not called at all in this case.
                 if #available(iOS 26.0, *), self.frame.minY < 0 {

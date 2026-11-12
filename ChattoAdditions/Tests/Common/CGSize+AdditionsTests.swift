@@ -25,6 +25,7 @@
 import XCTest
 import ChattoAdditions
 
+@MainActor
 class CGSize_AdditionsTests: XCTestCase {
     func testThat_WhenInsetsArePositive_ItInsetsCorrectly() {
         let dx: CGFloat = 1

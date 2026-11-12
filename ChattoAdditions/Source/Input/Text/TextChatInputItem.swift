@@ -24,6 +24,7 @@
 
 import UIKit
 
+@MainActor
 open class TextChatInputItem {
     typealias Class = TextChatInputItem
     public var textInputHandler: ((String) -> Void)?

@@ -39,6 +39,7 @@ public struct ReplyIndicatorStyle {
     var maxOffset: CGFloat { self.maxOffsetToReplyIndicator + size.width }
 }
 
+@MainActor
 public protocol BaseMessageCollectionViewCellStyleProtocol {
     func avatarSize(viewModel: MessageViewModelProtocol) -> CGSize // .zero => no avatar
     func avatarVerticalAlignment(viewModel: MessageViewModelProtocol) -> VerticalAlignment
@@ -563,6 +564,7 @@ open class BaseMessageCollectionViewCell<BubbleViewType>: UICollectionViewCell, 
     }
 }
 
+@MainActor
 private struct Layout {
     private(set) var size = CGSize.zero
     private(set) var failedButtonFrame = CGRect.zero

@@ -25,6 +25,7 @@
 import XCTest
 @testable import ChattoAdditions
 
+@MainActor
 class PhotosInputCameraPickerTests: XCTestCase {
     var sut: PhotosInputCameraPicker!
     var presentingController: UIViewController!

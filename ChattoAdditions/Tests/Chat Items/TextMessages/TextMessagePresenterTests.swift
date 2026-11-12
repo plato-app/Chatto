@@ -26,6 +26,7 @@ import XCTest
 import Chatto
 @testable import ChattoAdditions
 
+@MainActor
 class TextMessagePresenterTests: XCTestCase, UICollectionViewDataSource {
 
     var presenter: TextMessagePresenter<TextMessageViewModelDefaultBuilder<TextMessageModel<MessageModel>>, TextMessageTestHandler>!

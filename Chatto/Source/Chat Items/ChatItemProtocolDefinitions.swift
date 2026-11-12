@@ -34,12 +34,14 @@ public protocol ChatItemDecorationAttributesProtocol {
     var bottomMargin: CGFloat { get }
 }
 
+@MainActor
 public protocol ChatItemMenuPresenterProtocol {
     func shouldShowMenu() -> Bool
     func canPerformMenuControllerAction(_ action: Selector) -> Bool
     func performMenuControllerAction(_ action: Selector)
 }
 
+@MainActor
 public protocol ChatItemSpotlighting {
     func spotlight()
 }
@@ -48,6 +50,7 @@ extension ChatItemSpotlighting {
     public func spotlight() {}
 }
 
+@MainActor
 public protocol ChatItemPresenterProtocol: AnyObject, ChatItemMenuPresenterProtocol, ChatItemSpotlighting {
     static func registerCells(_ collectionView: UICollectionView)
 
@@ -71,6 +74,7 @@ public extension ChatItemPresenterProtocol { // Optionals
     func performMenuControllerAction(_ action: Selector) {}
 }
 
+@MainActor
 public protocol ChatItemPresenterBuilderProtocol {
     func canHandleChatItem(_ chatItem: ChatItemProtocol) -> Bool
     func createPresenterWithChatItem(_ chatItem: ChatItemProtocol) -> ChatItemPresenterProtocol

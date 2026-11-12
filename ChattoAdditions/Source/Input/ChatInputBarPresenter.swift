@@ -24,6 +24,7 @@
 
 import UIKit
 
+@MainActor
 protocol ChatInputBarPresenter: class {
     var focusedItem: ChatInputItemProtocol? { get }
     var chatInputBar: ChatInputBar { get }
