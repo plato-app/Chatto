@@ -72,10 +72,6 @@ class TextMessagePresenterTests: XCTestCase, UICollectionViewDataSource {
         XCTAssertEqual("Some text", cell.bubbleView.textMessageViewModel.text)
     }
 
-    func testThat_CanCalculateHeightInBackground() {
-        XCTAssertTrue(self.presenter.canCalculateHeightInBackground)
-    }
-
     func testThat_ShouldShowMenuReturnsTrue() {
         let cell = TextMessageCollectionViewCell(frame: CGRect.zero)
         self.presenter.cellWillBeShown(cell) // Needs to have a reference to the current cell before getting menu calls

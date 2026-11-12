@@ -57,7 +57,6 @@ public protocol ChatItemPresenterProtocol: AnyObject, ChatItemMenuPresenterProto
     var isItemUpdateSupported: Bool { get }
     func update(with chatItem: ChatItemProtocol)
 
-    var canCalculateHeightInBackground: Bool { get } // Default is false
     func heightForCell(maximumWidth width: CGFloat, decorationAttributes: ChatItemDecorationAttributesProtocol?) -> CGFloat
     func dequeueCell(collectionView: UICollectionView, indexPath: IndexPath) -> UICollectionViewCell
     func configureCell(_ cell: UICollectionViewCell, decorationAttributes: ChatItemDecorationAttributesProtocol?)
@@ -66,7 +65,6 @@ public protocol ChatItemPresenterProtocol: AnyObject, ChatItemMenuPresenterProto
 }
 
 public extension ChatItemPresenterProtocol { // Optionals
-    var canCalculateHeightInBackground: Bool { return false }
     func cellWillBeShown(_ cell: UICollectionViewCell) {}
     func cellWasHidden(_ cell: UICollectionViewCell) {}
     func shouldShowMenu() -> Bool { return false }
