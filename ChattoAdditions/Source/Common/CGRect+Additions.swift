@@ -42,8 +42,13 @@ public extension CGRect {
         }
     }
 
-    func bma_round(scale: CGFloat = UIMainScreenScale) -> CGRect {
+    func bma_round(scale: CGFloat) -> CGRect {
         let origin = CGPoint(x: self.origin.x.bma_round(scale: scale), y: self.origin.y.bma_round(scale: scale))
         return CGRect(origin: origin, size: self.size.bma_round(scale: scale))
+    }
+
+    @MainActor
+    func bma_round() -> CGRect {
+        return self.bma_round(scale: UIMainScreenScale)
     }
 }

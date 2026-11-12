@@ -26,6 +26,7 @@ import XCTest
 import Chatto
 @testable import ChattoAdditions
 
+@MainActor
 class BaseMessagePresenterTests: XCTestCase {
 
     // BaseMessagePresenter is generic, let's use the photo one for instance

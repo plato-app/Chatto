@@ -25,6 +25,7 @@
 import UIKit
 
 // If you wish to use your custom view instead of BaseChatViewControllerView, you must implement this protocol.
+@MainActor
 public protocol BaseChatViewControllerViewProtocol: class {
     var bmaInputAccessoryView: UIView? { get set }
 }

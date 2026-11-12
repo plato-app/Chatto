@@ -37,6 +37,7 @@ public struct LiveCameraSettings {
     }
 }
 
+@MainActor
 public final class LiveCameraCellPresenter {
     private typealias Class = LiveCameraCellPresenter
     public typealias AVAuthorizationStatusProvider = () -> AVAuthorizationStatus
@@ -54,7 +55,7 @@ public final class LiveCameraCellPresenter {
         self.authorizationStatusProvider = authorizationStatusProvider
     }
 
-    deinit {
+    isolated deinit {
         self.unsubscribeFromAppNotifications()
     }
 

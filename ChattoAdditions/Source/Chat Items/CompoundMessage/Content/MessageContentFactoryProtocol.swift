@@ -24,6 +24,7 @@
 import Chatto
 import UIKit
 
+@MainActor
 public protocol MessageContentFactoryProtocol {
     associatedtype Model
 

@@ -25,6 +25,7 @@
 import XCTest
 @testable import ChattoAdditions
 
+@MainActor
 class ChatInputBarTests: XCTestCase {
     private var bar: ChatInputBar!
     private var presenter: FakeChatInputBarPresenter!

@@ -24,19 +24,23 @@
 
 import UIKit
 
+@MainActor
 public protocol ImagePickerDelegate: class {
     func imagePickerDidFinish(_ picker: ImagePicker, mediaInfo: [UIImagePickerController.InfoKey: Any])
     func imagePickerDidCancel(_ picker: ImagePicker)
 }
 
+@MainActor
 public protocol ImagePicker: class {
     var controller: UIViewController { get }
 }
 
+@MainActor
 public protocol ImagePickerFactory: class {
     func makeImagePicker(delegate: ImagePickerDelegate) -> ImagePicker?
 }
 
+@MainActor
 public struct ImagePickerStore {
     public static var factory: ImagePickerFactory = DeviceImagePickerFactory()
 }

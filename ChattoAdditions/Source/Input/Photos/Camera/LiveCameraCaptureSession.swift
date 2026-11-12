@@ -25,15 +25,18 @@
 import Foundation
 import Photos
 
-protocol LiveCameraCaptureSessionProtocol {
+protocol LiveCameraCaptureSessionProtocol: Sendable {
     var captureLayer: AVCaptureVideoPreviewLayer? { get }
     var isInitialized: Bool { get }
     var isCapturing: Bool { get }
-    func startCapturing(_ completion: @escaping () -> Void)
-    func stopCapturing(_ completion: @escaping () -> Void)
+
+    @MainActor
+    func startCapturing(_ completion: @escaping @MainActor @Sendable () -> Void)
+    @MainActor
+    func stopCapturing(_ completion: @escaping @MainActor @Sendable () -> Void)
 }
 
-class LiveCameraCaptureSession: LiveCameraCaptureSessionProtocol {
+class LiveCameraCaptureSession: LiveCameraCaptureSessionProtocol, @unchecked Sendable {
 
     let settings: LiveCameraSettings
     var isInitialized: Bool = false
@@ -47,9 +50,9 @@ class LiveCameraCaptureSession: LiveCameraCaptureSessionProtocol {
     }
 
     deinit {
-        var layer = self.captureLayer
+        nonisolated(unsafe) var layer = self.captureLayer
         layer?.removeFromSuperlayer()
-        var session: AVCaptureSession? = self.isInitialized ? self.captureSession : nil
+        nonisolated(unsafe) var session: AVCaptureSession? = self.isInitialized ? self.captureSession : nil
         DispatchQueue.global(qos: .default).async {
             // Analogously to AVCaptureSession creation, dealloc can take very long, so let's do it out of the main thread
             if layer != nil { layer = nil }
@@ -57,25 +60,25 @@ class LiveCameraCaptureSession: LiveCameraCaptureSessionProtocol {
         }
     }
 
-    func startCapturing(_ completion: @escaping () -> Void) {
+    func startCapturing(_ completion: @escaping @MainActor @Sendable () -> Void) {
         let operation = BlockOperation()
         operation.addExecutionBlock { [weak operation, weak self] in
             guard let sSelf = self, let strongOperation = operation, !strongOperation.isCancelled else { return }
             sSelf.addInputDevicesIfNeeded()
             sSelf.captureSession?.startRunning()
-            DispatchQueue.main.async(execute: completion)
+            DispatchQueue.main.async { completion() }
         }
         self.queue.cancelAllOperations()
         self.queue.addOperation(operation)
     }
 
-    func stopCapturing(_ completion: @escaping () -> Void) {
+    func stopCapturing(_ completion: @escaping @MainActor @Sendable () -> Void) {
         let operation = BlockOperation()
         operation.addExecutionBlock { [weak operation, weak self] in
             guard let sSelf = self, let strongOperation = operation, !strongOperation.isCancelled else { return }
             sSelf.captureSession?.stopRunning()
             sSelf.removeInputDevices()
-            DispatchQueue.main.async(execute: completion)
+            DispatchQueue.main.async { completion() }
         }
         self.queue.cancelAllOperations()
         self.queue.addOperation(operation)

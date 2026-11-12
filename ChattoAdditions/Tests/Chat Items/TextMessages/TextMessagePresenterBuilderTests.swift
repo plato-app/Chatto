@@ -25,6 +25,7 @@
 import XCTest
 @testable import ChattoAdditions
 
+@MainActor
 class TextMessagePresenterBuilderTests: XCTestCase {
 
     func testThat_CreatesPresenter() {

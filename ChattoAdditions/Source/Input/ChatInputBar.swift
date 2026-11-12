@@ -24,6 +24,7 @@
 
 import UIKit
 
+@MainActor
 public protocol ChatInputBarDelegate: class {
     func inputBarShouldBeginTextEditing(_ inputBar: ChatInputBar) -> Bool
     func inputBarDidBeginEditing(_ inputBar: ChatInputBar)
@@ -81,6 +82,10 @@ open class ChatInputBar: ReusableXibView {
 
     open override func awakeFromNib() {
         super.awakeFromNib()
+        MainActor.assumeIsolated { awakeFromNibOnMain() }
+    }
+
+    private func awakeFromNibOnMain() {
         self.topBorderHeightConstraint.constant = 1 / UIScreen.main.scale
         self.textView.scrollsToTop = false
         self.textView.delegate = self

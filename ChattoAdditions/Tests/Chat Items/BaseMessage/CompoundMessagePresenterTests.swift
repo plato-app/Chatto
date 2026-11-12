@@ -25,6 +25,7 @@
 import XCTest
 
 @available(iOS 11, *)
+@MainActor
 final class CompoundMessagePresenterTests: XCTestCase {
 
     func test_WhenPresenterIsUpdatedWithTheSameMessage_ThenUpdateContentNotCalled_AndUpdateExistingContentPresentersNotCalled() {

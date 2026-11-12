@@ -25,6 +25,7 @@
 import XCTest
 @testable import ChattoAdditions
 
+@MainActor
 class PhotosInputPlaceholderDataProviderTests: XCTestCase {
 
     func testThat_ProviderWithNumberOfPlaceholder_ThenCountReturnsThisNumber() {

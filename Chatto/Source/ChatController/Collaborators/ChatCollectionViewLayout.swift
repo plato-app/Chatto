@@ -24,10 +24,12 @@
 
 import UIKit
 
+@MainActor
 public protocol ChatCollectionViewLayoutDelegate: class {
     func chatCollectionViewLayoutModel() -> ChatCollectionViewLayoutModel
 }
 
+@MainActor
 public struct ChatCollectionViewLayoutModel {
     let contentSize: CGSize
     let layoutAttributes: [UICollectionViewLayoutAttributes]
@@ -90,16 +92,13 @@ open class ChatCollectionViewLayout: UICollectionViewLayout {
             self.layoutModel = ChatCollectionViewLayoutModel.createEmptyModel()
             return
         }
-        var oldLayoutModel = self.layoutModel
+        let oldLayoutModel = self.layoutModel
         self.layoutModel = delegate.chatCollectionViewLayoutModel()
         self.layoutNeedsUpdate = false
         DispatchQueue.global(qos: .default).async { () -> Void in
             // Dealloc of layout with 5000 items take 25 ms on tests on iPhone 4s
             // This moves dealloc out of main thread
-            if oldLayoutModel != nil {
-                // Use nil check above to remove compiler warning: Variable 'oldLayoutModel' was written to, but never read
-                oldLayoutModel = nil
-            }
+            withExtendedLifetime(oldLayoutModel) { }
         }
     }
 

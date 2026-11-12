@@ -33,8 +33,13 @@ public extension CGSize {
         return self.bma_insetBy(dx: -dx, dy: -dy)
     }
 
-    func bma_round(scale: CGFloat = UIMainScreenScale) -> CGSize {
+    func bma_round(scale: CGFloat) -> CGSize {
         return CGSize(width: self.width.bma_round(scale: scale), height: self.height.bma_round(scale: scale))
+    }
+
+    @MainActor
+    func bma_round() -> CGSize {
+        return self.bma_round(scale: UIMainScreenScale)
     }
 
     func bma_rect(inContainer containerRect: CGRect,

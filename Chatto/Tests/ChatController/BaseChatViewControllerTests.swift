@@ -26,6 +26,7 @@ import UIKit
 import XCTest
 @testable import Chatto
 
+@MainActor
 class ChatViewControllerTests: XCTestCase {
 
     func testThat_WhenChatViewControllerInitated_ThenViewsIsNotLoaded() {

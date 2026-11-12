@@ -25,6 +25,7 @@
 import XCTest
 import ChattoAdditions
 
+@MainActor
 class CGFloat_AdditionsTests: XCTestCase {
     func testThat_ItRoundsCorrectly() {
         let x1Scale: CGFloat = 1

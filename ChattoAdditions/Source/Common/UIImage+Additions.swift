@@ -37,6 +37,7 @@ public extension UIImage {
         return image.resizableImage(withCapInsets: self.capInsets)
     }
 
+    @MainActor
     func bma_blendWithColor(_ color: UIColor) -> UIImage {
         let rect = CGRect(origin: CGPoint.zero, size: self.size)
         UIGraphicsBeginImageContextWithOptions(rect.size, false, UIScreen.main.scale)

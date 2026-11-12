@@ -25,6 +25,7 @@
 import UIKit
 import Chatto
 
+@MainActor
 public protocol TextBubbleViewStyleProtocol {
     func bubbleImage(viewModel: TextMessageViewModelProtocol, isSelected: Bool) -> UIImage
     func bubbleImageBorder(viewModel: TextMessageViewModelProtocol, isSelected: Bool) -> UIImage?
@@ -218,6 +219,7 @@ public final class TextBubbleView: UIView, MaximumLayoutWidthSpecificable, Backg
     }
 }
 
+@MainActor
 private final class TextBubbleLayoutModel {
     let layoutContext: LayoutContext
     var textFrame: CGRect = CGRect.zero

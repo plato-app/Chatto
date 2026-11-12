@@ -23,11 +23,13 @@
 
 import UIKit
 
+@MainActor
 public protocol ReplyFeedbackGeneratorProtocol {
     func generateFeedback()
 }
 
 @available(iOS 10, *)
+@MainActor
 struct ReplyFeedbackGenerator: ReplyFeedbackGeneratorProtocol {
 
     private let impactFeedbackGenerator = UIImpactFeedbackGenerator()

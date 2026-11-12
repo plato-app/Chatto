@@ -24,6 +24,7 @@
 import ChattoAdditions
 import UIKit
 
+@MainActor
 struct TestHelpers {
 
     static func makeMessage(withId messageId: String, date: Date = Date()) -> MessageModel {

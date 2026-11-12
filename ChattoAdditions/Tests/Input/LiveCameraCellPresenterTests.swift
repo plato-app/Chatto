@@ -26,6 +26,7 @@ import XCTest
 import Photos
 @testable import ChattoAdditions
 
+@MainActor
 class LiveCameraCellPresenterTests: XCTestCase {
 
     var presenter: LiveCameraCellPresenter!
@@ -198,7 +199,7 @@ class LiveCameraCellPresenterTests: XCTestCase {
     }
 }
 
-private class MockLiveCameraCaptureSession: LiveCameraCaptureSessionProtocol {
+private class MockLiveCameraCaptureSession: LiveCameraCaptureSessionProtocol, @unchecked Sendable {
     var captureLayer: AVCaptureVideoPreviewLayer? {
         if self.isInitialized {
             return AVCaptureVideoPreviewLayer()
@@ -209,7 +210,7 @@ private class MockLiveCameraCaptureSession: LiveCameraCaptureSessionProtocol {
     var isInitialized: Bool = false
     var isCapturing: Bool = false
 
-    func startCapturing(_ completion: @escaping () -> Void) {
+    func startCapturing(_ completion: @escaping @MainActor @Sendable () -> Void) {
         guard !self.isCapturing else { return }
 
         self.isInitialized = true
@@ -217,7 +218,7 @@ private class MockLiveCameraCaptureSession: LiveCameraCaptureSessionProtocol {
         completion()
     }
 
-    func stopCapturing(_ completion: @escaping () -> Void) {
+    func stopCapturing(_ completion: @escaping @MainActor @Sendable () -> Void) {
         guard self.isCapturing else { return }
 
         self.isInitialized = true

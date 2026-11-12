@@ -29,6 +29,7 @@ public struct CompoundBubbleLayout {
     public let safeAreaInsets: UIEdgeInsets
 }
 
+@MainActor
 public struct CompoundBubbleLayoutProvider {
 
     public struct Configuration: Hashable {

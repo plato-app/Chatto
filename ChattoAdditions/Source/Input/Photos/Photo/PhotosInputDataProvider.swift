@@ -68,7 +68,7 @@ final class PhotosInputDataProvider: NSObject, PhotosInputDataProviderProtocol, 
         PHPhotoLibrary.shared().unregisterChangeObserver(self)
     }
 
-    func prepare(_ completion: @escaping () -> Void) {
+    func prepare(_ completion: @escaping @MainActor () -> Void) {
         DispatchQueue.global(qos: .userInitiated).async { [weak self] in
             guard let self = self else {
                 DispatchQueue.main.async(execute: completion)
@@ -148,7 +148,7 @@ final class PhotosInputDataProvider: NSObject, PhotosInputDataProviderProtocol, 
             let request = PhotosInputDataProviderImageRequest()
             request.observeProgress(with: progressHandler, completion: completion)
             let options = self.makeFullImageRequestOptions()
-            options.progressHandler = { (progress, _, _, _) -> Void in
+            options.progressHandler = { @Sendable (progress, _, _, _) -> Void in
                 DispatchQueue.main.async {
                     request.handleProgressChange(with: progress)
                 }
@@ -213,7 +213,7 @@ final class PhotosInputDataProvider: NSObject, PhotosInputDataProviderProtocol, 
 
     // MARK: PHPhotoLibraryChangeObserver
 
-    func photoLibraryDidChange(_ changeInstance: PHChange) {
+    nonisolated func photoLibraryDidChange(_ changeInstance: PHChange) {
         // Photos may call this method on a background queue; switch to the main queue to update the UI.
         DispatchQueue.main.async { [weak self]  in
             guard let sSelf = self, let fetchResult = sSelf.fetchResult else { return }

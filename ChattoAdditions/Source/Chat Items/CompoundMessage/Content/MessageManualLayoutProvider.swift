@@ -24,6 +24,7 @@
 import UIKit
 import Chatto
 
+@MainActor
 public protocol MessageManualLayoutProviderProtocol: HashableRepresentible {
     func sizeThatFits(size: CGSize, safeAreaInsets: UIEdgeInsets) -> CGSize
 }
@@ -40,6 +41,7 @@ public struct TextMessageLayout {
     }
 }
 
+@MainActor
 public protocol TextMessageLayoutProviderProtocol: MessageManualLayoutProviderProtocol {
     func layout(for size: CGSize, safeAreaInsets: UIEdgeInsets) -> TextMessageLayout
 }

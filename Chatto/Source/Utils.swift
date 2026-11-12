@@ -25,9 +25,11 @@
 import Foundation
 import UIKit
 
+@MainActor
 private let scale = UIScreen.main.scale
 
 infix operator >=~
+@MainActor
 func >=~ (lhs: CGFloat, rhs: CGFloat) -> Bool {
     return round(lhs * scale) >= round(rhs * scale)
 }

@@ -23,6 +23,7 @@
 
 import UIKit
 
+@MainActor
 public protocol CompoundBubbleViewStyleProtocol {
     typealias ViewModel = MessageViewModelProtocol
     var hideBubbleForSingleContent: Bool { get }

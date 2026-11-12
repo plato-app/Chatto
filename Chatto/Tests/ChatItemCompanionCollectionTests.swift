@@ -25,6 +25,7 @@ THE SOFTWARE.
 import XCTest
 @testable import Chatto
 
+@MainActor
 class ChatItemCompanionCollectionTests: XCTestCase {
 
     var companionCollection: ChatItemCompanionCollection!

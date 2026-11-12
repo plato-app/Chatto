@@ -32,10 +32,12 @@ public final class ViewReference {
     }
 }
 
+@MainActor
 public protocol MessageContentPresenterDelegate: AnyObject {
     func presenterDidInvalidateLayout(_ presenter: MessageContentPresenterProtocol)
 }
 
+@MainActor
 public protocol MessageContentPresenterProtocol {
 
     var delegate: MessageContentPresenterDelegate? { get set }

@@ -24,20 +24,24 @@
 
 import UIKit
 
+@MainActor
 public protocol CellRevealing {
     var allowRevealing: Bool { get }
 }
 
+@MainActor
 public protocol AccessoryViewRevealable: CellRevealing {
     func revealAccessoryView(withOffset offset: CGFloat, animated: Bool)
     func preferredOffsetToRevealAccessoryView() -> CGFloat? // This allows to sync size in case cells have different sizes for the accessory view. Nil -> no restriction
 }
 
+@MainActor
 public protocol ReplyIndicatorRevealable: CellRevealing {
     func canShowReply() -> Bool
     func revealReplyIndicator(withOffset offset: CGFloat, animated: Bool) -> Bool
 }
 
+@MainActor
 public protocol ReplyIndicatorRevealerDelegate: AnyObject {
     func didPassThreshold(at: IndexPath)
     func didFinishReplyGesture(at: IndexPath)
@@ -82,7 +86,7 @@ final class CellPanGestureHandler: NSObject, UIGestureRecognizerDelegate {
         self.panRecognizer.delegate = self
     }
 
-    deinit {
+    isolated deinit {
         self.panRecognizer.delegate = nil
         self.collectionView.removeGestureRecognizer(self.panRecognizer)
     }

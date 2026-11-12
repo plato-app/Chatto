@@ -23,6 +23,7 @@
  */
 import UIKit
 
+@MainActor
 public protocol InputPositionControlling: AnyObject {
 
     var keyboardStatus: KeyboardStatus? { get }
