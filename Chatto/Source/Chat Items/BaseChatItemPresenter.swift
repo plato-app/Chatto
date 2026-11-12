@@ -47,10 +47,6 @@ open class BaseChatItemPresenter<CellT: UICollectionViewCell>: ChatItemPresenter
         fatalError("Implement in subclass")
     }
 
-    open var canCalculateHeightInBackground: Bool {
-        return false
-    }
-
     open func heightForCell(maximumWidth width: CGFloat, decorationAttributes: ChatItemDecorationAttributesProtocol?) -> CGFloat {
         assert(false, "Implement in subclass")
         return 0

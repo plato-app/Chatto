@@ -78,10 +78,6 @@ open class CompoundMessagePresenter<ViewModelBuilderT, InteractionHandlerT>
         self.updateContent()
     }
 
-    open override var canCalculateHeightInBackground: Bool {
-        return true
-    }
-
     open override class func registerCells(_ collectionView: UICollectionView) {
         // Cell registration is happening lazily, right before the moment when a cell is dequeued.
     }

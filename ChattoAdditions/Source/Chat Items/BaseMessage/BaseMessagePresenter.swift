@@ -53,8 +53,7 @@ open class BaseMessagePresenter<BubbleViewT, ViewModelBuilderT, InteractionHandl
     InteractionHandlerT.MessageType == ViewModelBuilderT.ModelT,
     InteractionHandlerT.ViewModelType == ViewModelBuilderT.ViewModelT,
     BubbleViewT: UIView,
-    BubbleViewT: MaximumLayoutWidthSpecificable,
-    BubbleViewT: BackgroundSizingQueryable {
+    BubbleViewT: MaximumLayoutWidthSpecificable {
 
     public typealias CellT = BaseMessageCollectionViewCell<BubbleViewT>
     public typealias ModelT = ViewModelBuilderT.ModelT
@@ -165,10 +164,6 @@ open class BaseMessagePresenter<BubbleViewT, ViewModelBuilderT, InteractionHandl
         }
         self.configureCell(self.sizingCell, decorationAttributes: decorationAttributes, animated: false, additionalConfiguration: nil)
         return self.sizingCell.sizeThatFits(CGSize(width: width, height: .greatestFiniteMagnitude)).height
-    }
-
-    open override var canCalculateHeightInBackground: Bool {
-        return self.sizingCell.canCalculateSizeInBackground
     }
 
     open override func cellWillBeShown() {

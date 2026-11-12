@@ -63,10 +63,6 @@ class PhotoMessagePresenterTests: XCTestCase, UICollectionViewDataSource {
         XCTAssertEqual(self.testImage, cell.bubbleView.photoMessageViewModel.image.value)
     }
 
-    func testThat_CanCalculateHeightInBackground() {
-        XCTAssertTrue(self.presenter.canCalculateHeightInBackground)
-    }
-
     func testThat_RegistersAndDequeuesCells() {
         let collectionView = UICollectionView(frame: CGRect.zero, collectionViewLayout: UICollectionViewFlowLayout())
         PhotoMessagePresenter<PhotoMessageViewModelDefaultBuilder<PhotoMessageModel<MessageModel>>, PhotoMessageTestHandler>.registerCells(collectionView)

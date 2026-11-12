@@ -37,7 +37,7 @@ public protocol PhotoBubbleViewStyleProtocol {
     func overlayColor(viewModel: PhotoMessageViewModelProtocol) -> UIColor?
 }
 
-open class PhotoBubbleView: UIView, MaximumLayoutWidthSpecificable, BackgroundSizingQueryable {
+open class PhotoBubbleView: UIView, MaximumLayoutWidthSpecificable {
 
     public var viewContext: ViewContext = .normal
     public var animationDuration: CFTimeInterval = 0.33
@@ -207,10 +207,6 @@ open class PhotoBubbleView: UIView, MaximumLayoutWidthSpecificable, BackgroundSi
         let layoutModel = PhotoBubbleLayoutModel(layoutContext: layoutContext)
         layoutModel.calculateLayout()
         return layoutModel
-    }
-
-    open var canCalculateSizeInBackground: Bool {
-        return true
     }
 
 }

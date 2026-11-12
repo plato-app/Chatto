@@ -92,10 +92,9 @@ public struct BaseMessageCollectionViewCellLayoutConstants {
         - Have a BubbleViewType that responds properly to sizeThatFits:
 */
 
-open class BaseMessageCollectionViewCell<BubbleViewType>: UICollectionViewCell, BackgroundSizingQueryable, AccessoryViewRevealable, ReplyIndicatorRevealable, UIGestureRecognizerDelegate where
+open class BaseMessageCollectionViewCell<BubbleViewType>: UICollectionViewCell, AccessoryViewRevealable, ReplyIndicatorRevealable, UIGestureRecognizerDelegate where
     BubbleViewType: UIView,
-    BubbleViewType: MaximumLayoutWidthSpecificable,
-    BubbleViewType: BackgroundSizingQueryable {
+    BubbleViewType: MaximumLayoutWidthSpecificable {
 
     public var animationDuration: CFTimeInterval = 0.33
     open var viewContext: ViewContext = .normal
@@ -146,10 +145,6 @@ open class BaseMessageCollectionViewCell<BubbleViewType>: UICollectionViewCell, 
     }
 
     open var useAutolayoutForBubbleView: Bool { false }
-
-    open var canCalculateSizeInBackground: Bool {
-        return self.bubbleView.canCalculateSizeInBackground
-    }
 
     public private(set) var bubbleView: BubbleViewType!
     open func createBubbleView() -> BubbleViewType! {
