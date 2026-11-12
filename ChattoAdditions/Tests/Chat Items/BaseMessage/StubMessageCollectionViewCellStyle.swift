@@ -59,4 +59,16 @@ final class StubMessageCollectionViewCellStyle: BaseMessageCollectionViewCellSty
     func layoutConstants(viewModel: MessageViewModelProtocol) -> BaseMessageCollectionViewCellLayoutConstants {
         return stubbedLayoutConstantsResult
     }
+    var stubbedSenderIdViewResult = UIView()
+    func senderIdView(viewModel: MessageViewModelProtocol) -> UIView {
+        return stubbedSenderIdViewResult
+    }
+    var stubbedSenderIdHeightResult: CGFloat = 0
+    func senderIdHeight(viewModel: MessageViewModelProtocol) -> CGFloat {
+        return stubbedSenderIdHeightResult
+    }
+    var stubbedSenderIdHorizontalOffsetResult: CGFloat = 0
+    func senderIdHorizontalOffset(viewModel: MessageViewModelProtocol) -> CGFloat {
+        return stubbedSenderIdHorizontalOffsetResult
+    }
 }
