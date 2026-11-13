@@ -33,6 +33,7 @@ public struct PhotosInputViewAppearance {
     }
 }
 
+@MainActor
 public protocol PhotosInputViewProtocol {
     var delegate: PhotosInputViewDelegate? { get set }
     var presentingController: UIViewController? { get }
@@ -43,6 +44,7 @@ public enum PhotosInputViewPhotoSource {
     case gallery
 }
 
+@MainActor
 public protocol PhotosInputViewDelegate: AnyObject {
     func inputView(_ inputView: PhotosInputViewProtocol,
                    didSelectImage image: UIImage,
@@ -106,11 +108,6 @@ public final class PhotosInputView: UIView, PhotosInputViewProtocol {
                   appearance: appearance)
     }
 
-    deinit {
-        self.collectionView.dataSource = nil
-        self.collectionView.delegate = nil
-    }
-
     private func commonInit() {
         self.autoresizingMask = [.flexibleWidth, .flexibleHeight]
         self.configureCollectionView()
@@ -142,7 +139,7 @@ public final class PhotosInputView: UIView, PhotosInputViewProtocol {
             sSelf.collectionView.performBatchUpdates({
                 sSelf.collectionView.reloadItems(at: [IndexPath(item: Constants.liveCameraItemIndex, section: 0)])
             }, completion: { (_) in
-                DispatchQueue.main.async(execute: completion)
+                DispatchQueue.main.async { completion() }
             })
         }
     }
@@ -168,7 +165,7 @@ public final class PhotosInputView: UIView, PhotosInputViewProtocol {
                 sSelf.dataProvider = newDataProvider
                 sSelf.cellProvider = PhotosInputCellProvider(collectionView: sSelf.collectionView, dataProvider: newDataProvider)
                 sSelf.collectionView.reloadData()
-                DispatchQueue.main.async(execute: completion)
+                DispatchQueue.main.async { completion() }
             }
         }
     }
@@ -176,7 +173,7 @@ public final class PhotosInputView: UIView, PhotosInputViewProtocol {
     func reload() {
         self.collectionViewQueue.addTask { [weak self] (completion) in
             self?.collectionView.reloadData()
-            DispatchQueue.main.async(execute: completion)
+            DispatchQueue.main.async { completion() }
         }
     }
 
@@ -285,7 +282,7 @@ extension PhotosInputView: PhotosInputDataProviderDelegate {
 
             updateBlock()
             sSelf.collectionView.reloadData()
-            DispatchQueue.main.async(execute: completion)
+            DispatchQueue.main.async { completion() }
         }
     }
 

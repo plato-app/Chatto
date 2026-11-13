@@ -26,6 +26,7 @@ import XCTest
 import Chatto
 @testable import ChattoAdditions
 
+@MainActor
 class TextMessagePresenterTests: XCTestCase, UICollectionViewDataSource {
 
     var presenter: TextMessagePresenter<TextMessageViewModelDefaultBuilder<TextMessageModel<MessageModel>>, TextMessageTestHandler>!
@@ -69,10 +70,6 @@ class TextMessagePresenterTests: XCTestCase, UICollectionViewDataSource {
         let cell = TextMessageCollectionViewCell(frame: CGRect.zero)
         self.presenter.configureCell(cell, decorationAttributes: self.decorationAttributes)
         XCTAssertEqual("Some text", cell.bubbleView.textMessageViewModel.text)
-    }
-
-    func testThat_CanCalculateHeightInBackground() {
-        XCTAssertTrue(self.presenter.canCalculateHeightInBackground)
     }
 
     func testThat_ShouldShowMenuReturnsTrue() {

@@ -32,6 +32,7 @@ public protocol ViewModelBuilderProtocol {
     func createViewModel(_ model: ModelT) -> ViewModelT
 }
 
+@MainActor
 public protocol BaseMessageInteractionHandlerProtocol {
 
     associatedtype MessageType
@@ -52,8 +53,7 @@ open class BaseMessagePresenter<BubbleViewT, ViewModelBuilderT, InteractionHandl
     InteractionHandlerT.MessageType == ViewModelBuilderT.ModelT,
     InteractionHandlerT.ViewModelType == ViewModelBuilderT.ViewModelT,
     BubbleViewT: UIView,
-    BubbleViewT: MaximumLayoutWidthSpecificable,
-    BubbleViewT: BackgroundSizingQueryable {
+    BubbleViewT: MaximumLayoutWidthSpecificable {
 
     public typealias CellT = BaseMessageCollectionViewCell<BubbleViewT>
     public typealias ModelT = ViewModelBuilderT.ModelT
@@ -96,7 +96,9 @@ open class BaseMessagePresenter<BubbleViewT, ViewModelBuilderT, InteractionHandl
     public let interactionHandler: InteractionHandlerT?
     public let cellStyle: BaseMessageCollectionViewCellStyleProtocol
 
-    public private(set) final lazy var messageViewModel: ViewModelT = self.createViewModel()
+    public private(set) final lazy var messageViewModel: ViewModelT = { @MainActor in
+        self.createViewModel()
+    }()
 
     open func createViewModel() -> ViewModelT {
         let viewModel = self.viewModelBuilder.createViewModel(self.messageModel)
@@ -119,7 +121,7 @@ open class BaseMessagePresenter<BubbleViewT, ViewModelBuilderT, InteractionHandl
 
     public var decorationAttributes: ChatItemDecorationAttributes!
     open func configureCell(_ cell: CellT, decorationAttributes: ChatItemDecorationAttributes, animated: Bool, additionalConfiguration: (() -> Void)?) {
-        cell.performBatchUpdates({ () -> Void in
+        cell.performBatchUpdates({ [self] () -> Void in
             self.messageViewModel.decorationAttributes = decorationAttributes.messageDecorationAttributes
             // just in case something went wrong while showing UIMenuController
             self.messageViewModel.isUserInteractionEnabled = true
@@ -162,10 +164,6 @@ open class BaseMessagePresenter<BubbleViewT, ViewModelBuilderT, InteractionHandl
         }
         self.configureCell(self.sizingCell, decorationAttributes: decorationAttributes, animated: false, additionalConfiguration: nil)
         return self.sizingCell.sizeThatFits(CGSize(width: width, height: .greatestFiniteMagnitude)).height
-    }
-
-    open override var canCalculateHeightInBackground: Bool {
-        return self.sizingCell.canCalculateSizeInBackground
     }
 
     open override func cellWillBeShown() {

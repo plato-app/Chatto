@@ -34,12 +34,14 @@ public protocol ChatItemDecorationAttributesProtocol {
     var bottomMargin: CGFloat { get }
 }
 
+@MainActor
 public protocol ChatItemMenuPresenterProtocol {
     func shouldShowMenu() -> Bool
     func canPerformMenuControllerAction(_ action: Selector) -> Bool
     func performMenuControllerAction(_ action: Selector)
 }
 
+@MainActor
 public protocol ChatItemSpotlighting {
     func spotlight()
 }
@@ -48,13 +50,13 @@ extension ChatItemSpotlighting {
     public func spotlight() {}
 }
 
+@MainActor
 public protocol ChatItemPresenterProtocol: AnyObject, ChatItemMenuPresenterProtocol, ChatItemSpotlighting {
     static func registerCells(_ collectionView: UICollectionView)
 
     var isItemUpdateSupported: Bool { get }
     func update(with chatItem: ChatItemProtocol)
 
-    var canCalculateHeightInBackground: Bool { get } // Default is false
     func heightForCell(maximumWidth width: CGFloat, decorationAttributes: ChatItemDecorationAttributesProtocol?) -> CGFloat
     func dequeueCell(collectionView: UICollectionView, indexPath: IndexPath) -> UICollectionViewCell
     func configureCell(_ cell: UICollectionViewCell, decorationAttributes: ChatItemDecorationAttributesProtocol?)
@@ -63,7 +65,6 @@ public protocol ChatItemPresenterProtocol: AnyObject, ChatItemMenuPresenterProto
 }
 
 public extension ChatItemPresenterProtocol { // Optionals
-    var canCalculateHeightInBackground: Bool { return false }
     func cellWillBeShown(_ cell: UICollectionViewCell) {}
     func cellWasHidden(_ cell: UICollectionViewCell) {}
     func shouldShowMenu() -> Bool { return false }
@@ -71,6 +72,7 @@ public extension ChatItemPresenterProtocol { // Optionals
     func performMenuControllerAction(_ action: Selector) {}
 }
 
+@MainActor
 public protocol ChatItemPresenterBuilderProtocol {
     func canHandleChatItem(_ chatItem: ChatItemProtocol) -> Bool
     func createPresenterWithChatItem(_ chatItem: ChatItemProtocol) -> ChatItemPresenterProtocol

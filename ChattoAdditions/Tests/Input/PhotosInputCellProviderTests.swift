@@ -25,6 +25,7 @@
 import XCTest
 @testable import ChattoAdditions
 
+@MainActor
 class PhotosInputCellProviderTests: XCTestCase, UICollectionViewDataSource {
     var collectionView: UICollectionView!
     var fakePhotosProvider: FakePhotosInputDataProvider!

@@ -24,6 +24,7 @@
 
 import UIKit
 
+@MainActor
 protocol ChatInputItemViewDelegate: class {
     func inputItemViewTapped(_ view: ChatInputItemView)
 }

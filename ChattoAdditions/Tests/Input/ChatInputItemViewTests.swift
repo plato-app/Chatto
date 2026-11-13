@@ -25,6 +25,7 @@
 import XCTest
 @testable import ChattoAdditions
 
+@MainActor
 class ChatInputItemViewTests: XCTestCase {
     private var item: ChatInputItemProtocol!
     private var itemView: ChatInputItemView!

@@ -25,6 +25,7 @@
 import XCTest
 @testable import Chatto
 
+@MainActor
 class ChatCollectionViewLayoutModelTests: XCTestCase {
 
     func testThat_WhenEmptyDataIsProvided_ThenLayoutIsCorrectlyCreated() {

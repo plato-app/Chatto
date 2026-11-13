@@ -10,7 +10,6 @@
 </div>
 
 ## Features
-- Calculation of collection view changes and layout in background
 - Supports pagination in both directions and autoloading
 - Message count contention for fast pagination and rotation with thousands of messsages
 - Accessory view revealing by swiping from right

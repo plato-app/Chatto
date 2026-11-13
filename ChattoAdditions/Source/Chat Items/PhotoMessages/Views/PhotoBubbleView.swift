@@ -24,6 +24,7 @@
 
 import UIKit
 
+@MainActor
 public protocol PhotoBubbleViewStyleProtocol {
     func maskingImage(viewModel: PhotoMessageViewModelProtocol) -> UIImage
     func borderImage(viewModel: PhotoMessageViewModelProtocol) -> UIImage?
@@ -36,7 +37,7 @@ public protocol PhotoBubbleViewStyleProtocol {
     func overlayColor(viewModel: PhotoMessageViewModelProtocol) -> UIColor?
 }
 
-open class PhotoBubbleView: UIView, MaximumLayoutWidthSpecificable, BackgroundSizingQueryable {
+open class PhotoBubbleView: UIView, MaximumLayoutWidthSpecificable {
 
     public var viewContext: ViewContext = .normal
     public var animationDuration: CFTimeInterval = 0.33
@@ -208,10 +209,6 @@ open class PhotoBubbleView: UIView, MaximumLayoutWidthSpecificable, BackgroundSi
         return layoutModel
     }
 
-    open var canCalculateSizeInBackground: Bool {
-        return true
-    }
-
 }
 
 private class PhotoBubbleLayoutModel {
@@ -220,6 +217,7 @@ private class PhotoBubbleLayoutModel {
     var visualCenter: CGPoint = .zero // Because image is cropped a few points on the side of the tail, the apparent center will be a bit shifted
     var size: CGSize = .zero
 
+    @MainActor
     struct LayoutContext {
         let photoSize: CGSize
         let placeholderSize: CGSize

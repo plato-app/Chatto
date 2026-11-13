@@ -23,6 +23,7 @@
 
 import UIKit
 
+@MainActor
 public protocol MessageDecorationViewFactoryProtocol: AnyObject {
     associatedtype Model
     func canCreateDecorationView(for model: Model) -> Bool

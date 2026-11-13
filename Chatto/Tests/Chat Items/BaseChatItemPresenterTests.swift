@@ -25,6 +25,7 @@
 import XCTest
 @testable import Chatto
 
+@MainActor
 class BaseChatItemPresenterTests: XCTestCase {
 
     var presenter: BaseChatItemPresenter<UICollectionViewCell>!

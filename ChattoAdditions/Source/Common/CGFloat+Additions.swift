@@ -25,7 +25,12 @@
 import CoreGraphics
 
 public extension CGFloat {
-    func bma_round(scale: CGFloat = UIMainScreenScale) -> CGFloat {
+    func bma_round(scale: CGFloat) -> CGFloat {
         return ceil(self * scale) * (1.0 / scale)
+    }
+
+    @MainActor
+    func bma_round() -> CGFloat {
+        return self.bma_round(scale: UIMainScreenScale)
     }
 }

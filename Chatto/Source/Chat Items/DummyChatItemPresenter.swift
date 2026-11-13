@@ -37,10 +37,6 @@ class DummyChatItemPresenter: ChatItemPresenterProtocol {
         // Does nothing
     }
 
-    var canCalculateHeightInBackground: Bool {
-        return true
-    }
-
     func heightForCell(maximumWidth width: CGFloat, decorationAttributes: ChatItemDecorationAttributesProtocol?) -> CGFloat {
         return 0
     }

@@ -24,6 +24,7 @@
 import UIKit
 import Chatto
 
+@MainActor
 public protocol TextMessageMenuItemPresenterProtocol {
     func shouldShowMenu(for text: String, item: MessageModelProtocol) -> Bool
     func canPerformMenuControllerAction(_ action: Selector, for text: String, item: MessageModelProtocol) -> Bool

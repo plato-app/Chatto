@@ -24,15 +24,18 @@
 
 import UIKit
 
+@MainActor
 public protocol KeyboardEventsHandling: AnyObject {
     func onKeyboardStateDidChange(_ height: CGFloat, _ status: KeyboardStatus)
 }
 
+@MainActor
 public protocol ScrollViewEventsHandling: AnyObject {
     func onScrollViewDidScroll(_ scrollView: UIScrollView)
     func onScrollViewDidEndDragging(_ scrollView: UIScrollView, _ decelerate: Bool)
 }
 
+@MainActor
 public protocol ReplyActionHandler: AnyObject {
     func handleReply(for: ChatItemProtocol)
 }
@@ -109,11 +112,6 @@ open class BaseChatViewController: UIViewController,
         if let updateType = updateType {
             self.enqueueModelUpdate(updateType: updateType)
         }
-    }
-
-    deinit {
-        self.collectionView?.delegate = nil
-        self.collectionView?.dataSource = nil
     }
 
     open override func loadView() {
@@ -213,7 +211,7 @@ open class BaseChatViewController: UIViewController,
     }
 
     var unfinishedBatchUpdatesCount: Int = 0
-    var onAllBatchUpdatesFinished: (() -> Void)?
+    var onAllBatchUpdatesFinished: (@MainActor () -> Void)?
 
     var inputContainerBottomConstraint: NSLayoutConstraint!
     private func addInputBarContainer() {

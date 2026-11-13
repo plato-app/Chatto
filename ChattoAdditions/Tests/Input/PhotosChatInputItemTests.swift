@@ -25,6 +25,7 @@
 import XCTest
 @testable import ChattoAdditions
 
+@MainActor
 class PhotosChatInputItemTests: XCTestCase {
     private var inputItem: PhotosChatInputItem!
     override func setUp() {

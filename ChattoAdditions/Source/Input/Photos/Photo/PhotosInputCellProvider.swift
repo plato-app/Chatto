@@ -24,6 +24,7 @@
 
 import UIKit
 
+@MainActor
 protocol PhotosInputCellProviderProtocol: class {
     func cellForItem(at indexPath: IndexPath) -> UICollectionViewCell
     func configureFullImageLoadingIndicator(at indexPath: IndexPath,

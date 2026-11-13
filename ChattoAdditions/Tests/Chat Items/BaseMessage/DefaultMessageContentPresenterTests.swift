@@ -24,6 +24,7 @@
 @testable import ChattoAdditions
 import XCTest
 
+@MainActor
 final class DefaultMessageContentPresenterTests: XCTestCase {
 
     func test_WhenPresenterIsUpdatedWithTheSameMessageWithAnotherId_ThenOnMessageUpdateClosureIsCalled_AndItIsCalledWithUpdatedMessage() {

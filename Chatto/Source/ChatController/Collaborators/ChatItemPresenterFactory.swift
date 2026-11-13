@@ -24,6 +24,7 @@
 
 import UIKit
 
+@MainActor
 public protocol ChatItemPresenterFactoryProtocol {
     func createChatItemPresenter(_ chatItem: ChatItemProtocol) -> ChatItemPresenterProtocol
     func configure(withCollectionView collectionView: UICollectionView)

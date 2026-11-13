@@ -25,6 +25,7 @@
 import UIKit
 import Chatto
 
+@MainActor
 public protocol TextBubbleViewStyleProtocol {
     func bubbleImage(viewModel: TextMessageViewModelProtocol, isSelected: Bool) -> UIImage
     func bubbleImageBorder(viewModel: TextMessageViewModelProtocol, isSelected: Bool) -> UIImage?
@@ -33,7 +34,7 @@ public protocol TextBubbleViewStyleProtocol {
     func textInsets(viewModel: TextMessageViewModelProtocol, isSelected: Bool) -> UIEdgeInsets
 }
 
-public final class TextBubbleView: UIView, MaximumLayoutWidthSpecificable, BackgroundSizingQueryable {
+public final class TextBubbleView: UIView, MaximumLayoutWidthSpecificable {
 
     public var preferredMaxLayoutWidth: CGFloat = 0
     public var animationDuration: CFTimeInterval = 0.33
@@ -212,12 +213,9 @@ public final class TextBubbleView: UIView, MaximumLayoutWidthSpecificable, Backg
         self.layoutCache.setObject(layoutModel, forKey: layoutContext.hashValue as AnyObject)
         return layoutModel
     }
-
-    public var canCalculateSizeInBackground: Bool {
-        return true
-    }
 }
 
+@MainActor
 private final class TextBubbleLayoutModel {
     let layoutContext: LayoutContext
     var textFrame: CGRect = CGRect.zero

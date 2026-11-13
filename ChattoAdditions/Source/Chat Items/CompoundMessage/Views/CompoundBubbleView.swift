@@ -25,7 +25,7 @@ import UIKit
 import Chatto
 
 @available(iOS 11, *)
-public final class CompoundBubbleView: UIView, MaximumLayoutWidthSpecificable, BackgroundSizingQueryable {
+public final class CompoundBubbleView: UIView, MaximumLayoutWidthSpecificable {
 
     // MARK: - Type declarations
 
@@ -111,13 +111,6 @@ public final class CompoundBubbleView: UIView, MaximumLayoutWidthSpecificable, B
     // MARK: - MaximumLayoutWidthSpecificable
 
     public var preferredMaxLayoutWidth: CGFloat = 0
-
-    // MARK: - BackgroundSizingQueryable
-
-    public var canCalculateSizeInBackground: Bool {
-        assertionFailure("Should not be called. It's here only because we use base cell")
-        return false
-    }
 
     // MARK: - Layout
 

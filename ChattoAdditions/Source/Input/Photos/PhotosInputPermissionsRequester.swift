@@ -26,11 +26,13 @@ import Foundation
 import AVFoundation
 import Photos
 
+@MainActor
 public protocol PhotosInputPermissionsRequesterDelegate: AnyObject {
     func requester(_ requester: PhotosInputPermissionsRequesterProtocol, didReceiveUpdatedCameraPermissionStatus status: AVAuthorizationStatus)
     func requester(_ requester: PhotosInputPermissionsRequesterProtocol, didReceiveUpdatedPhotosPermissionStatus status: PHAuthorizationStatus)
 }
 
+@MainActor
 public protocol PhotosInputPermissionsRequesterProtocol: AnyObject {
     var delegate: PhotosInputPermissionsRequesterDelegate? { get set }
 
@@ -101,7 +103,7 @@ final class PhotosInputPermissionsRequester: PhotosInputPermissionsRequesterProt
         guard self.needsToRequestPhotosPermission else { return }
         self.needsToRequestPhotosPermission = false
         self.isRequestingPermission = true
-        PHPhotoLibrary.requestAuthorization { (status: PHAuthorizationStatus) -> Void in
+        PHPhotoLibrary.requestAuthorization { @Sendable (status: PHAuthorizationStatus) -> Void in
             DispatchQueue.main.async(execute: { () -> Void in
                 self.isRequestingPermission = false
                 self.delegate?.requester(self, didReceiveUpdatedPhotosPermissionStatus: status)

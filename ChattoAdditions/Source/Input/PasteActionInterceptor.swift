@@ -23,6 +23,7 @@
 
 import Foundation
 
+@MainActor
 public protocol PasteActionInterceptor {
     func canPerformPaste(withSender sender: Any?) -> Bool
     /// If action wasn't handeled by interceptor, original implementation will be used instead

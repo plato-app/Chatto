@@ -25,6 +25,7 @@
 import XCTest
 @testable import ChattoAdditions
 
+@MainActor
 class PhotoMessagePresenterTests: XCTestCase, UICollectionViewDataSource {
 
     var presenter: PhotoMessagePresenter<PhotoMessageViewModelDefaultBuilder<PhotoMessageModel<MessageModel>>, PhotoMessageTestHandler>!
@@ -60,10 +61,6 @@ class PhotoMessagePresenterTests: XCTestCase, UICollectionViewDataSource {
         let cell = PhotoMessageCollectionViewCell(frame: CGRect.zero)
         self.presenter.configureCell(cell, decorationAttributes: self.decorationAttributes)
         XCTAssertEqual(self.testImage, cell.bubbleView.photoMessageViewModel.image.value)
-    }
-
-    func testThat_CanCalculateHeightInBackground() {
-        XCTAssertTrue(self.presenter.canCalculateHeightInBackground)
     }
 
     func testThat_RegistersAndDequeuesCells() {

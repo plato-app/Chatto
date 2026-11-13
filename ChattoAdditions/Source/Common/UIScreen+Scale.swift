@@ -24,4 +24,5 @@
 
 import UIKit
 
+@MainActor
 public let UIMainScreenScale = UIScreen.main.scale
