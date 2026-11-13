@@ -121,7 +121,7 @@ open class BaseMessagePresenter<BubbleViewT, ViewModelBuilderT, InteractionHandl
 
     public var decorationAttributes: ChatItemDecorationAttributes!
     open func configureCell(_ cell: CellT, decorationAttributes: ChatItemDecorationAttributes, animated: Bool, additionalConfiguration: (() -> Void)?) {
-        cell.performBatchUpdates({ () -> Void in
+        cell.performBatchUpdates({ [self] () -> Void in
             self.messageViewModel.decorationAttributes = decorationAttributes.messageDecorationAttributes
             // just in case something went wrong while showing UIMenuController
             self.messageViewModel.isUserInteractionEnabled = true
